@@ -191,3 +191,7 @@ body {
      text-align: center;
  }
 
+ .form-control{
+   width: auto !important;
+ }
+
