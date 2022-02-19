@@ -31,7 +31,7 @@
                         <li class="nav-item active"><a href="index.html" class="nav-link text-uppercase font-weight-bold">Home <span class="sr-only">(current)</span></a></li>
                         <li class="nav-item"><a href="getQuote.html" class="nav-link text-uppercase font-weight-bold">Get Quote</a></li>
                         <li class="nav-item"><a href="quotehistory.html" class="nav-link text-uppercase font-weight-bold">Quote History</a></li>
-                        <li class="nav-item"><a href="login.html" class="nav-link text-uppercase font-weight-bold">Login</a></li>
+                        <li class="nav-item"><a href="register.html" class="nav-link text-uppercase font-weight-bold">Register</a></li>
                         <li class="nav-item"><a href="profile.html" class="nav-link text-uppercase font-weight-bold">Profile</a></li>
                     </ul>
                 </div>
@@ -44,7 +44,38 @@
     
 </body>
 
-<div id="footer">
+
+
+    <span class="border">
+        <div class="form">
+            <form> 
+                <fieldset>          
+                <div class="col-12">
+                <label for="inputgallon" class="form-label">Gallons Requested</label>
+                <input type="number" class="form-control" id="gallons">
+                </div>
+                <div class="col-12">
+                <label for="inputAddress" class="form-label">Address</label>
+                <input type="text" class="form-control" id="inputAddress" value="From your profile" aria-label="readonly input example" readonly>
+                </div>
+                <div class="col-12">
+                <label for="delivery-date">delivery-date:   </label>
+                <input class="form-control" type="date" id="end_date" name="delivery-date"
+                    value=""
+                    min="20222-2-1" max="2030-12-31">
+                &nbsp;
+                </div>
+                <div class="col-12">
+                <button type="submit" class="btn btn-primary" onclick="getQuote()">Get Quote</button>
+                </div>  
+            </fieldset>          
+            </form>
+        </div>
+    </span>
+
+    <p id="quote"> </p>
+
+    <div id="footer">
     <div class="footer-dark">
         <footer class="footer">
             <div class="container">
@@ -76,34 +107,6 @@
         </footer>
     </div>
 </div>
-
-    <span class="border">
-        <div class="form">
-            <form> 
-                <fieldset>          
-                <div class="col-12">
-                <label for="inputgallon" class="form-label">Gallons Requested</label>
-                <input type="number" class="form-control" id="gallons">
-                </div>
-                <div class="col-12">
-                <label for="inputAddress" class="form-label">Address</label>
-                <input type="text" class="form-control" id="inputAddress" value="From your profile" aria-label="readonly input example" readonly>
-                </div>
-                <div class="col-12">
-                <label for="delivery-date">delivery-date:   </label>
-                <input class="form-control" type="date" id="end_date" name="delivery-date"
-                    value=""
-                    min="20222-2-1" max="2030-12-31">
-                &nbsp;
-                </div>
-                <div class="col-12">
-                <button type="submit" class="btn btn-primary">Get Quote</button>
-                </div>  
-            </fieldset>          
-            </form>
-        </div>
-    </span>
-    
 
 </body>
 
