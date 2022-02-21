@@ -58,6 +58,7 @@
         <input class="form-control" type="text" id="lcity" name="city" maxlength="100" required>
         <label for="lstate">State:</label>
         <select class="form-control" name="states" id="states" required>
+            <option value="none">Select</option>
             <option value="AL">Alabama</option>
             <option value="AK">Alaska</option>
             <option value="AZ">Arizona</option>
@@ -111,7 +112,7 @@
         </select><br>
         <label for="zip">Zipcode:</label>
         <input class="form-control" type="text" id="zip" name="zipcode" pattern="[0-9]+" minlength="5" maxlength="9" required><br>
-        <input class="form-control" type="button" value="Save Changes"><br>
+        <button type="submit" class="btn btn-primary" value="Save Changes" onclick = "profile()">Save Changes</button>
     </form>
 </div>
 

@@ -9,3 +9,5 @@ How to use?
 
 Open index.html(any html file will work) in browser 
 and navigate through pages using links on right corner.
+
+Note: Validation are added to HTML for max length and empty fields.
