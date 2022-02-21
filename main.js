@@ -31,7 +31,9 @@ async function getQuote()
     }
 
     alert("Suggested Price: $3.55\nTotal Amount Due: $350.00")
-        
+    
+
+    //create pricing module
     
     //quote_data.innerHTML += "<b>Ticket Number: " + booking[i].ticket_no + "  |  </b>Booking Reference: " + booking[i].book_ref + "  |  Passenger ID: " + booking[i].passenger_id + "<br/>";
     
@@ -53,6 +55,8 @@ async function login()
         alert("Empty password")
         return false;
     }
+
+    //proceed to validate login details with the DB
 }
 
 async function register()
@@ -71,6 +75,8 @@ async function register()
         alert("Empty password")
         return false;
     }
+
+    //create a new user in the db
 }
 
 async function profile()
@@ -81,37 +87,6 @@ async function profile()
     var city = document.querySelector('#lcity').value;
     var state = document.querySelector('#states').value;
     var zip = document.querySelector('#zipcode').value;
-
-    if(fullname == "")
-    {
-        alert("Enter full name please")
-        return false;
-    }
-
-    if(address1 == "")
-    {
-        alert("Enter primary address please")
-        return false;
-    
-    }
-
-    if (city == "")
-    {
-        alert("Enter a city please")
-        return false;
-    }
-
-    if(state == "none")
-    {
-        alert("Please select a state from the drop down menu")
-        return false;
-    }
-
-    if(zip == "")
-    {
-        alert("Please enter zipcode")
-        return false;
-    }
 
     //proceed to make changes to the DB if not alerted.
 }
