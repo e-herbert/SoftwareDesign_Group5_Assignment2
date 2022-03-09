@@ -24,7 +24,7 @@ app.use(express.static('public'));
 app.use(cors());
 app.use(express.json());
 
-app.post('/login', async(req, res) => {
+app.post('/login', function(req, res) {
   try{
     const {username, password} = req.body;
     var userFound = false
@@ -32,10 +32,11 @@ app.post('/login', async(req, res) => {
     //query to search user
 
     userFound = true
+    //userFound = false
 
     if (userFound == true) 
     {
-        console.log("success");
+        console.log("user logged in");
     }
 
     else
@@ -48,6 +49,58 @@ app.post('/login', async(req, res) => {
   } catch(err){
       console.log(err.message)
   }
+})
+
+app.post('/register', async(req,res) => {
+  try{
+    const {username, password} = req.body;
+    var uniqueUser = false;
+
+    //add query to search for user 
+    uniqueUser = true;
+    //uniqueUser = false
+    if (uniqueUser == true)
+    {
+      console.log("created new user");
+      //res.redirect('/profile')
+    }
+
+    else
+    {
+      console.log("Username taken");
+      
+      
+    }
+
+    res.send(uniqueUser);
+    res.end();
+
+  } catch(err){
+    console.log(err.message);
+  }
+
+})
+
+app.post('/profile', function(req, res){
+  const {username, password, address1, address2, city, state, zip} = req.body;
+  var completed = false;
+
+  console.log("hello from profile about to update")
+  if (address2 == "")
+  {
+      //query to update profile in db when address2 is empty
+  }
+
+  else
+  {
+      //query to update profile in db when address2 is not empty
+  }
+
+  completed = true
+  console.log("Profile updated")
+  res.send(completed);
+  res.end();
+
 })
 
 app.listen(5000, () => {

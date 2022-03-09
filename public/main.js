@@ -85,46 +85,82 @@ async function login()
     var userName = document.querySelector("#user").value;
     var passwd = document.querySelector('#pass').value;
 
-    if(userName == "") {
+    if(userName == "") 
+    {
         alert("Empty username");
-    } else if(passwd == "") {
+    } 
+    else if(passwd == "") 
+    {
         alert("Empty password");
-    }/* else {
-		//location.assign("profile.html");
-		console.log("success")
-	}*/
+    }
+    else
+    {
+        //validating login details with the DB
+        const body = { userName : userName, password : passwd }; 
+        // connect to heroku, remove localhost:port
+        const response = await fetch("http://localhost:5000/login", 
+        {        
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body)
+        } ); 
 
-    //validating login details with the DB
-    const body = { userName : userName, password : passwd }; 
-    // connect to heroku, remove localhost:port
-    const response = await fetch("http://localhost:5000/login", 
-    {        
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body)
-    } ); 
+        const creds = await response.json();
 
-    const creds = await response.json();
+        if (creds == true)
+        {
+            location.href = "getQuote.html"
+        }
+
+        else
+        {
+            alert("Invalid username or password. Please try again.")
+        }
+    }
     console.log(creds);
 }
 
 async function register()
 {
-    var userName = document.querySelector("#user").value;
+    var username = document.querySelector("#user").value;
     var password = document.querySelector('#pass').value;
     var val = true;
-    if(userName == "") {
+    if(username == "") 
+    {
         alert("Empty User name")
         val = false;
-    } else if(password == "" && val) {
+    } 
+    
+    else if(password == "" && val) 
+    {
         alert("Empty password")
         val = false;
-    } /*else{
-       // window.location("profile.html");
-        console.log("success")
-    }*/
+    } 
 
-    //create a new user in the db
+    else
+    {
+        //create a new user in the db
+        const body = { username : username, password : password }; 
+        // connect to heroku, remove localhost:port
+        const response = await fetch("http://localhost:5000/register", 
+        {        
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body)
+        } ); 
+
+        const uniqueUser = response.json();
+
+        if (uniqueUser)
+        {
+            location.href = "profile.html"
+        }
+
+        else
+        {
+            alert("Username is already in use. Please choose another username")
+        }
+    }
 }
 
 async function profile()
@@ -137,4 +173,28 @@ async function profile()
     var zip = document.querySelector('#zipcode').value;
 
     //proceed to make changes to the DB if not alerted.
+
+    const body = { fullname : fullname, address1 : address1, address2 : address2, city : city, state : state, zip : zip }; 
+    // connect to heroku, remove localhost:port
+
+    //check why this part isn't working
+    const response = await fetch("http://localhost:5000/profile", 
+    {        
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+    } ); 
+
+    const completed = response.json();
+
+    if (completed)
+    {
+        location.href = "getQuote.html"
+        alert("Why am I still here?")
+    }
+
+    else
+    {
+        alert("Please complete profile")
+    }
 }
