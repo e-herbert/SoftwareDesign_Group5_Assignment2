@@ -38,47 +38,6 @@ async function getQuote()
     //quote_data.innerHTML += "<b>Ticket Number: " + booking[i].ticket_no + "  |  </b>Booking Reference: " + booking[i].book_ref + "  |  Passenger ID: " + booking[i].passenger_id + "<br/>";
     
 }
-/*
-async function login()
-{
-    var userName = document.querySelector("#user").value;
-    var password = document.querySelector('#pass').value;
-    var val = true;
-
-    if(userName == "")
-    {
-        alert("Empty username")
-        val = false;
-    }
-
-    if(password == "" && val)
-    {
-        alert("Empty password")
-        val = false;
-    }
-    //redirecting to getquote page
-    //window.location("www.google.com");
-    console.log("True");
-
-    if(val == true)
-    {
-        redirect();
-    }
-
-    //location.href = "getQuote.html";
-    
-    console.log("success");
-    //proceed to validate login details with the DB
-
-    const body = { userName : userName, password : password }; 
-    // connect to heroku, remove localhost:port
-    const response = await fetch("http://localhost:5000/login", 
-    {        
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body)
-    } ); 
-}*/
 
 async function login()
 {
@@ -111,7 +70,6 @@ async function login()
         {
             location.href = "getQuote.html"
         }
-
         else
         {
             alert("Invalid username or password. Please try again.")
@@ -124,19 +82,15 @@ async function register()
 {
     var username = document.querySelector("#user").value;
     var password = document.querySelector('#pass').value;
-    var val = true;
+	
     if(username == "") 
     {
         alert("Empty User name")
-        val = false;
     } 
-    
-    else if(password == "" && val) 
+    else if(password == "") 
     {
         alert("Empty password")
-        val = false;
-    } 
-
+    }
     else
     {
         //create a new user in the db
@@ -155,7 +109,6 @@ async function register()
         {
             location.href = "profile.html"
         }
-
         else
         {
             alert("Username is already in use. Please choose another username")
