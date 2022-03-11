@@ -110,9 +110,9 @@
             <option value="WI">Wisconsin</option>
             <option value="WY">Wyoming</option>
         </select><br>
-        <label for="zip">Zipcode:</label>
-        <input class="form-control" type="text" id="zip" name="zipcode" pattern="[0-9]+" minlength="5" maxlength="9" required><br>
-        <button type="button" class="btn btn-primary" value="Save Changes" onclick = "profile()">Save Changes</button>
+        <label for="zip">Zipcode:</label>       
+        <input class="form-control" type="text" id="zip" name="zipcode" pattern="[0-9]+" minlength="5" maxlength="9"  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" required><br>
+        <button type="button" class="btn btn-primary" onclick = "profile()">Update</button>
     </form>
 </div>
 

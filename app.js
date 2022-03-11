@@ -67,8 +67,7 @@ app.post('/register', async(req,res) => {
 
     else
     {
-      console.log("Username taken");
-      
+      console.log("Username taken");      
       
     }
 

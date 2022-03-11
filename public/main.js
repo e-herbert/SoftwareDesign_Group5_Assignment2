@@ -116,14 +116,51 @@ async function register()
     }
 }
 
+
 async function profile()
 {
     var fullname = document.querySelector('#name').value;
-    var address1 = document.queryselector('#address1').value;
-    var address2 = document.queryselector('#address2').value;
+    var address1 = document.querySelector('#address1').value;
+    var address2 = document.querySelector('#address2').value;
     var city = document.querySelector('#lcity').value;
     var state = document.querySelector('#states').value;
-    var zip = document.querySelector('#zipcode').value;
+    var zip = document.querySelector('#zip').value;
+
+    if(fullname == "")
+    {
+        alert("Enter full name please")
+        return false;
+    }
+
+    if(address1 == "")
+    {
+        alert("Enter primary address please")
+        return false;    
+    }
+
+    if (city == "")
+    {
+        alert("Enter a city please")
+        return false;
+    }
+
+    if(state == "none")
+    {
+        alert("Please select a state from the drop down menu")
+        return false;
+    }
+
+    if(zip == "")
+    {
+        alert("Please enter zipcode")
+        return false;
+    }
+
+    if(zip.length <5 || zip.length >5)
+    {
+        alert("Enter valid zipcode")
+        return false;
+    }
 
     //proceed to make changes to the DB if not alerted.
 
@@ -142,12 +179,74 @@ async function profile()
 
     if (completed)
     {
-        location.href = "getQuote.html"
-        alert("Why am I still here?")
+        //location.href = "getQuote.html"
+        alert("Profile updated sucessfully")
     }
 
     else
     {
         alert("Please complete profile")
     }
+}
+
+
+//pricing module
+async function getSuggestedPrice(location, month, quoteHistory, gallons)
+{
+    let locFactor    = 0.0;
+    let rhFactor     = 0.0;
+    let galFactor    = 0.0;
+    let rfFactor     = 0.0;
+    let margin       = 0.0;
+    const compFactor = 0.10;
+
+    // CHECK LOCATION FACTOR
+    if(location === 'TX')
+    {
+        locFactor = 0.02;
+    } 
+    else 
+    {
+        locFactor = 0.04;
+    }
+
+    // CHECK QUOTE HISTORY
+    if(quoteHistory === undefined) 
+    {
+        rhFactor = 0.01;
+    } 
+    else 
+    {
+        rhFactor = 0.0;
+    }
+
+    // CHECK GALLON AMOUNT
+    if(gallons > 1000) 
+    {
+        galFactor = 0.02;
+    } 
+    else 
+    {
+        galFactor = 0.03;
+    }
+
+    // CHECK RATE FLUCTUATION
+    if(month === 6 || month === 7 || month === 8) 
+    {
+        rfFactor = 0.04;
+    } else 
+    {
+        rfFactor = 0.03;
+    }
+
+    // MARGIN OF PRICE
+    margin = 1.50 * (locFactor - rhFactor + galFactor + compFactor + rfFactor);
+    
+    // SUGGESTED PRICE
+    return (1.50 + margin).toFixed(2);
+} 
+
+async function getTotalAmount(suggestedPrice, gallons)
+{
+    return (suggestedPrice * gallons).toFixed(2);
 }
