@@ -14,9 +14,6 @@ const pool = new Pool({
     database: 'cpdsuccl'
 });
 
-// var fs = require('fs');
-// var queries = fs.createWriteStream('queries.sql', {flags: 'a'});
-// var transaction = fs.createWriteStream('transaction.sql', {flags: 'a'});
 
 app.use(express.static('public'));
 
@@ -24,7 +21,8 @@ app.use(express.static('public'));
 app.use(cors());
 app.use(express.json());
 
-app.post('/login', function(req, res) {
+//endpoint to authenticate user credential and send back api to client side JS for future request
+app.post('/login', async(req, res)=> {
   try{
     const {username, password} = req.body;
     var userFound = false
@@ -43,6 +41,10 @@ app.post('/login', function(req, res) {
     {
       console.log("Input username or password is invalid")
     }
+    //unit test
+    console.log("connected to DB for unit test from /login endpoint")
+    const demo = await pool.query(`select * from public.history;`)
+    //console.log(demo.rows)
 
     res.send(userFound)
 
@@ -51,6 +53,7 @@ app.post('/login', function(req, res) {
   }
 })
 
+//endpoint to register user, the idea right not is to use bycrypt to encryt password and send back api to client side JS for future request
 app.post('/register', async(req,res) => {
   try{
     const {username, password} = req.body;
@@ -70,6 +73,10 @@ app.post('/register', async(req,res) => {
       console.log("Username taken");      
       
     }
+    //unit test
+    console.log("connected to DB for unit test from /register endpoint")
+    const demo = await pool.query(`select * from public.history;`)
+    //console.log(demo.rows)
 
     res.send(uniqueUser);
     res.end();
@@ -80,27 +87,57 @@ app.post('/register', async(req,res) => {
 
 })
 
-app.post('/profile', function(req, res){
-  const {username, password, address1, address2, city, state, zip} = req.body;
-  var completed = false;
-
-  console.log("hello from profile about to update")
-  if (address2 == "")
+//endpoint to update profile 
+app.post('/profile', async(req, res)=>{
+  try
   {
-      //query to update profile in db when address2 is empty
-  }
+    const {username, password, address1, address2, city, state, zip} = req.body;
+    var completed = false;
 
-  else
+    console.log("hello from profile about to update")
+    if (address2 == "")
+    {
+        //query to update profile in db when address2 is empty
+    }
+
+    else
+    {
+        //query to update profile in db when address2 is not empty
+    }
+
+    completed = true
+    console.log("Profile updated")
+    //unit test
+    console.log("connected to DB for unit test from /profile endpoint")
+    const demo = await pool.query(`select * from public.history;`)
+    //console.log(demo.rows)
+    res.send(completed);
+    res.end();
+  }
+  catch(err)
   {
-      //query to update profile in db when address2 is not empty
+    console.log(err.message);
   }
-
-  completed = true
-  console.log("Profile updated")
-  res.send(completed);
-  res.end();
 
 })
+
+//endpoint to to query quote history and send back to client side javascript
+app.post('/history', async(req, res)=>{
+
+  try{
+        //unit test
+        console.log("connected to DB for unit test from /history endpoint")
+        const demo = await pool.query(`select date, gallons, suggested_price, total_price, address1 as address  from public.history as h, public.userProfile as p where p.username=h.username;`)
+        //console.log(demo.rows)
+        res.send(demo.rows)
+        res.end()
+  }
+  catch(err){
+    console.log(err.message);
+  }
+})
+
+
 
 app.listen(5000, () => {
     console.log('server is up and running')

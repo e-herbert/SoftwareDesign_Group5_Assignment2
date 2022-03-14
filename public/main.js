@@ -31,10 +31,7 @@ async function getQuote(gallons, date, test)
             alert("Please enter Date")
             return false;
         }
-    }
     
-    if(!test)
-    {
         alert("Suggested Price: $3.55\nTotal Amount Due: $350.00")
     }
     
@@ -57,16 +54,15 @@ async function login(userName, passwd, test)
         if(userName == "") 
         {
             alert("Empty username");
+            return false;
         } 
         else if(passwd == "") 
         {
             alert("Empty password");
+            return false;
         }
-    }
-    else
-    {
-        if(!test)
-        {
+    
+        //console.log("T")
         //validating login details with the DB
         const body = { userName : userName, password : passwd }; 
         // connect to heroku, remove localhost:port
@@ -90,7 +86,7 @@ async function login(userName, passwd, test)
     }else{
         creds=true;
     }
-    }
+    
     console.log(creds);
 
     return creds;
@@ -108,17 +104,16 @@ async function register(username, password, test)
         if(username == "") 
         {
             alert("Empty User name")
+            return false;
         } 
         else if(password == "") 
         {
             alert("Empty password")
-        }
-    }
-    else
-    {
+            return false;
+        }    
+    
         //create a new user in the db
-        if(!test)
-        {
+        
             const body = { username : username, password : password }; 
             // connect to heroku, remove localhost:port
             const response = await fetch("http://localhost:5000/register", 
@@ -142,160 +137,172 @@ async function register(username, password, test)
         else{
             uniqueUser = true;
         }
-    }
+    
 
     return uniqueUser;
 }
 module.exports.register = register
 //function to update profile 
-async function profile()
+async function profile(fullname, address1, address2, city, state, zip, test)
 {
-    var fullname = document.querySelector('#name').value;
-    var address1 = document.querySelector('#address1').value;
-    var address2 = document.querySelector('#address2').value;
-    var city = document.querySelector('#lcity').value;
-    var state = document.querySelector('#states').value;
-    var zip = document.querySelector('#zip').value;
-
-    if(fullname == "")
+    if(!test)
     {
-        alert("Enter full name please")
-        return false;
+        var fullname = document.querySelector('#name').value;
+        var address1 = document.querySelector('#address1').value;
+        var address2 = document.querySelector('#address2').value;
+        var city = document.querySelector('#lcity').value;
+        var state = document.querySelector('#states').value;
+        var zip = document.querySelector('#zip').value;
+
+        if(fullname == "")
+        {
+            alert("Enter full name please")
+            return false;
+        }
+
+        if(address1 == "")
+        {
+            alert("Enter primary address please")
+            return false;    
+        }
+
+        if (city == "")
+        {
+            alert("Enter a city please")
+            return false;
+        }
+
+        if(state == "none")
+        {
+            alert("Please select a state from the drop down menu")
+            return false;
+        }
+
+        if(zip == "")
+        {
+            alert("Please enter zipcode")
+            return false;
+        }
+
+        if(zip.length <5 || zip.length >5)
+        {
+            alert("Enter valid zipcode")
+            return false;
+        }
+
+        //proceed to make changes to the DB if not alerted.
+
+        const body = { fullname : fullname, address1 : address1, address2 : address2, city : city, state : state, zip : zip }; 
+        // connect to heroku, remove localhost:port
+
+        //check why this part isn't working
+        const response = await fetch("http://localhost:5000/profile", 
+        {        
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body)
+        } ); 
+
+        const completed = response.json();
+
+        if (completed)
+        {
+            //location.href = "getQuote.html"
+            alert("Profile updated sucessfully")
+        }
+
+        else
+        {
+            alert("Please complete profile")
+        }
     }
-
-    if(address1 == "")
-    {
-        alert("Enter primary address please")
-        return false;    
-    }
-
-    if (city == "")
-    {
-        alert("Enter a city please")
-        return false;
-    }
-
-    if(state == "none")
-    {
-        alert("Please select a state from the drop down menu")
-        return false;
-    }
-
-    if(zip == "")
-    {
-        alert("Please enter zipcode")
-        return false;
-    }
-
-    if(zip.length <5 || zip.length >5)
-    {
-        alert("Enter valid zipcode")
-        return false;
-    }
-
-    //proceed to make changes to the DB if not alerted.
-
-    const body = { fullname : fullname, address1 : address1, address2 : address2, city : city, state : state, zip : zip }; 
-    // connect to heroku, remove localhost:port
-
-    //check why this part isn't working
-    const response = await fetch("http://localhost:5000/profile", 
-    {        
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body)
-    } ); 
-
-    const completed = response.json();
-
-    if (completed)
-    {
-        //location.href = "getQuote.html"
-        alert("Profile updated sucessfully")
-    }
-
-    else
-    {
-        alert("Please complete profile")
+    else{
+        completed = true;
     }
 
     return completed;
 }
+module.exports.profile = profile
 //Function to update profile when user register 
-async function regProfile()
+async function regProfile(fullname, address1, address2, city, state, zip, test)
 {
-    var fullname = document.querySelector('#name').value;
-    var address1 = document.querySelector('#address1').value;
-    var address2 = document.querySelector('#address2').value;
-    var city = document.querySelector('#lcity').value;
-    var state = document.querySelector('#states').value;
-    var zip = document.querySelector('#zip').value;
-
-    if(fullname == "")
+    if(!test)
     {
-        alert("Enter full name please")
-        return false;
-    }
+        var fullname = document.querySelector('#name').value;
+        var address1 = document.querySelector('#address1').value;
+        var address2 = document.querySelector('#address2').value;
+        var city = document.querySelector('#lcity').value;
+        var state = document.querySelector('#states').value;
+        var zip = document.querySelector('#zip').value;
 
-    if(address1 == "")
-    {
-        alert("Enter primary address please")
-        return false;    
-    }
+        if(fullname == "")
+        {
+            alert("Enter full name please")
+            return false;
+        }
 
-    if (city == "")
-    {
-        alert("Enter a city please")
-        return false;
-    }
+        if(address1 == "")
+        {
+            alert("Enter primary address please")
+            return false;    
+        }
 
-    if(state == "none")
-    {
-        alert("Please select a state from the drop down menu")
-        return false;
-    }
+        if (city == "")
+        {
+            alert("Enter a city please")
+            return false;
+        }
 
-    if(zip == "")
-    {
-        alert("Please enter zipcode")
-        return false;
-    }
+        if(state == "none")
+        {
+            alert("Please select a state from the drop down menu")
+            return false;
+        }
 
-    if(zip.length <5 || zip.length >5)
-    {
-        alert("Enter valid zipcode")
-        return false;
-    }
+        if(zip == "")
+        {
+            alert("Please enter zipcode")
+            return false;
+        }
 
-    //proceed to make changes to the DB if not alerted.
+        if(zip.length <5 || zip.length >5)
+        {
+            alert("Enter valid zipcode")
+            return false;
+        }
 
-    const body = { fullname : fullname, address1 : address1, address2 : address2, city : city, state : state, zip : zip }; 
-    // connect to heroku, remove localhost:port
+        //proceed to make changes to the DB if not alerted.
 
-    //check why this part isn't working
-    const response = await fetch("http://localhost:5000/profile", 
-    {        
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body)
-    } ); 
+        const body = { fullname : fullname, address1 : address1, address2 : address2, city : city, state : state, zip : zip }; 
+        // connect to heroku, remove localhost:port
 
-    const completed = response.json();
+        //check why this part isn't working
+        const response = await fetch("http://localhost:5000/profile", 
+        {        
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body)
+        } ); 
 
-    if (completed)
-    {
-        location.href = "getQuote.html"
-        alert("Profile updated sucessfully")
-    }
+        const completed = response.json();
 
-    else
-    {
-        alert("Please complete profile")
+        if (completed)
+        {
+            location.href = "getQuote.html"
+            alert("Profile updated sucessfully")
+        }
+
+        else
+        {
+            alert("Please complete profile")
+        }
+    }else{
+        completed = true
     }
 
     return completed;
 }
-
+module.exports.regProfile= regProfile;
 //trial function
 function trail()
 {
@@ -304,82 +311,87 @@ function trail()
 }
 
 //function to connect quote history page and keep quotehistory page updated from back end
-async function historyQ()
+async function historyQ(test)
 {
-    //alert("from main.js!!!!!!!!!!")
-    console.log("true")
-    const response = await fetch("http://localhost:5000/history", 
-    {        
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        //body: JSON.stringify(body)
-    });
-    const abc = await response.json();
-    console.log(abc)
+    if(!test)
+    {
+        //alert("from main.js!!!!!!!!!!")
+        //console.log("true")
+        const response = await fetch("http://localhost:5000/history", 
+        {        
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            //body: JSON.stringify(body)
+        });
+        const abc = await response.json();
+        console.log(abc)
 
-        var cols = [];  
-        for (var i = 0; i < abc.length; i++)
-        {
-            for (var key in abc[i]) 
+            var cols = [];  
+            for (var i = 0; i < abc.length; i++)
             {
-                
-                if (cols.indexOf(key) === -1) 
+                for (var key in abc[i]) 
                 {
-                    // Push all keys to the array
-                    //console.log(key+"\n")
-                    cols.push(key);
+                    
+                    if (cols.indexOf(key) === -1) 
+                    {
+                        // Push all keys to the array
+                        //console.log(key+"\n")
+                        cols.push(key);
+                    }
                 }
             }
-        }
 
-        // create a table element
-        var table = document.createElement("table");
-             
-        // create table row
-        //var tr = table.insertRow(-1);
-        //tr.setAttribute("class", "table100-head");
-        //var thead = document.createElement("thead") 
-        //var header = table.createTHead();
-        // for (var i = 0; i < cols.length; i++)
-        // {
-             
-        //     // Create the table header
-        //     var theader = document.createElement("th");
-        //     theader.innerHTML = cols[i];
-             
-        //     // Append column name to the table row
-        //     tr.appendChild(theader);
-        //     //header.appendChild(tr);
-        // }
-        //header.appendChild(tr);
-
-        // Add the data to the table
-        for (var i = 0; i < abc.length; i++) 
-        {
-                 
-          // Create a new row
-          var trow = table.insertRow(-1);
-          trow.setAttribute("class", "table100-head");
-          for (var j = 0; j < cols.length; j++) 
-          {
-              var cell = trow.insertCell(-1);
+            // create a table element
+            var table = document.createElement("table");
                 
-              // Inserting the cell data              
-                cell.innerHTML = abc[i][cols[j]];
-              
-          }
-        }
-       
-        //Adding the created table
-        var newTable = document.getElementById("table");
-        newTable.innerHTML = "";
-        newTable.appendChild(table);
-      
-    console.log("true")
+            // create table row
+            //var tr = table.insertRow(-1);
+            //tr.setAttribute("class", "table100-head");
+            //var thead = document.createElement("thead") 
+            //var header = table.createTHead();
+            // for (var i = 0; i < cols.length; i++)
+            // {
+                
+            //     // Create the table header
+            //     var theader = document.createElement("th");
+            //     theader.innerHTML = cols[i];
+                
+            //     // Append column name to the table row
+            //     tr.appendChild(theader);
+            //     //header.appendChild(tr);
+            // }
+            //header.appendChild(tr);
 
-    return abc.rows.length
+            // Add the data to the table
+            for (var i = 0; i < abc.length; i++) 
+            {
+                    
+            // Create a new row
+            var trow = table.insertRow(-1);
+            trow.setAttribute("class", "table100-head");
+                for (var j = 0; j < cols.length; j++) 
+                {
+                    var cell = trow.insertCell(-1);
+                    var x=j+1;
+                    cell.setAttribute("class", "column"+x);
+                        
+                    // Inserting the cell data              
+                        cell.innerHTML = abc[i][cols[j]];
+                    
+                }
+            }
+        
+            //Adding the created table
+            var newTable = document.getElementById("table");
+            newTable.innerHTML = "";
+            newTable.appendChild(table);
+        
+        console.log("true")
+    }
+
+    return true
 }
-
+module.exports.historyQ = historyQ
 
 //pricing module
 async function getSuggestedPrice(location, month, quoteHistory, gallons)

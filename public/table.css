@@ -258,16 +258,16 @@
       content: "Date";
     }
     table tbody tr td:nth-child(2):before {
-      content: "Order ID";
+      content: "Gallons";
     }
     table tbody tr td:nth-child(3):before {
-      content: "Name";
+      content: "Suggested Price";
     }
     table tbody tr td:nth-child(4):before {
-      content: "Price";
+      content: "Total Amount";
     }
     table tbody tr td:nth-child(5):before {
-      content: "Quantity";
+      content: "Address";
     }
     table tbody tr td:nth-child(6):before {
       content: "Total";

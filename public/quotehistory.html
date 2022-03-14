@@ -58,101 +58,48 @@
     
 <body>
 
-        <div class="limiter">
-        <div class="container-table100">
-        <div class="wrap-table100">
-        <div class="table100">
-        <table>
-        <thead>
-        <tr class="table100-head">
-        <th class="column1">Delivery Date</th>
-        <th class="column2">Gallons</th>
-        <th class="column3">Suggested Price</th>
-        <th class="column4">Total Amount Due</th>
-        <th class="column5">Address</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-        <td class="column1">2022-02-18 01:22</td>
-        <td class="column2">250</td>
-        <td class="column3">$3.86</td>
-        <td class="column4">$1008.65</td>
-        <td class="column5">7010 Odio Street, Houston, Tx</td>
-        </tr>
-        <tr>
-        <td class="column1">2022-02-03 05:57</td>
-        <td class="column2">170</td>
-        <td class="column3">$3.29</td>
-        <td class="column4">$756.00</td>
-        <td class="column5">7010 Odio Street, Houston, Tx</td>
-        </tr>
-        <tr>
-        <td class="column1">2022-01-19 05:57</td>
-        <td class="column2">300</td>
-        <td class="column3">$3.97</td>
-        <td class="column4">$1545.97</td>
-        <td class="column5">Ap #660-2341 Sed Avenue, Dallas, Tx</td>
-        </tr>
-        <tr>
-        <td class="column1">2022-01-18 23:06</td>
-        <td class="column2">60</td>
-        <td class="column3">$4.12</td>
-        <td class="column4">$250.02</td>
-        <td class="column5">7010 Odio Street, Houston, Tx</td>
-        </tr>
-        <tr>
-        <td class="column1">2022-01-17 05:57</td>
-        <td class="column2">400</td>
-        <td class="column3">$3.64</td>
-        <td class="column4">$1800.64</td>
-        <td class="column5">Ap #660-2341 Sed Avenue, Dallas, Tx</td>
-        </tr>
-        <tr>
-        <td class="column1">2022-01-14 05:57</td>
-        <td class="column2">220</td>
-        <td class="column3">$3.92</td>
-        <td class="column4">$745.02</td>
-        <td class="column5">Ap #660-2341 Sed Avenue, Dallas, Tx</td>
-        </tr>
-        <tr>
-        <td class="column1">2022-01-11 05:57</td>
-        <td class="column2">110</td>
-        <td class="column3">$3.95</td>
-        <td class="column4">$390.45</td>
-        <td class="column5">7010 Odio Street, Houston, Tx</td>
-        </tr>
-        <tr>
-        <td class="column1">2022-01-09 05:57</td>
-        <td class="column2">50</td>
-        <td class="column3">$4.14</td>
-        <td class="column4">$230.14</td>
-        <td class="column5">Ap #660-2341 Sed Avenue, Dallas, Tx</td>
-        </tr>
-        <tr>
-        <td class="column1">2022-01-08 05:57</td>
-        <td class="column2">180</td>
-        <td class="column3">$3.96</td>
-        <td class="column4">$728.9</td>
-        <td class="column5">Ap #660-2341 Sed Avenue, Dallas, Tx</td>
+    <!-- <span class="border">
+        <form>
+        <div class="form">
+            <button type="button" class="btn btn-primary" onclick = "historyQ()">Get QUOTE History</button>
+            
+        </div>
+        <table  id="table"></table>
+        </form>
+    </span>            -->
+    
+        <!-- <form>
+            <div class="form">
+            <button type="button" class="btn btn-primary" onclick="historyQ()">Get Quote History</button>
+            </div> 
+        </form> -->
 
-        </tr>
-        <tr>
-        <td class="column1">2022-01-05 05:57</td>
-        <td class="column2">65</td>
-        <td class="column3">$5.24</td>
-        <td class="column4">$189.24</td>
-        <td class="column5">7010 Odio Street, Houston, Tx</td>
+        <script>
+            historyQ();
+        </script>
 
-        </tr>        
-        </tr>
-        </tbody>
-        </table>
-        </div>
-        </div>
-        </div>
-        </div>
         
+        <div class="limiter">
+            <div class="container-table100">
+                <div class="wrap-table100">
+                    <div class="table100">
+                        <table>
+                        <thead>
+                            <tr class="table100-head">
+                                <th class="column1">Delivery Date</th>
+                                <th class="column2">Gallons</th>
+                                <th class="column3">Suggested Price</th>
+                                <th class="column4">Total Amount Due</th>
+                                <th class="column5">Address</th>
+                            </tr>
+                        </thead>
+                        </table>
+                        <div id="table"> </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <script src="https://colorlib.com/etc/tb/Table_Responsive_v1/vendor/jquery/jquery-3.2.1.min.js" 
         integrity="sha384-xBuQ/xzmlsLoJpyjoggmTEz8OWUFM0/RC5BsqQBDX2v5cMvDHcMakNTNrHIW2I5f" crossorigin="anonymous"></script>
         
