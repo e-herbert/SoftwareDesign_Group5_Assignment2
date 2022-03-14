@@ -5,9 +5,22 @@ Erik Herbert-Hernandez
 Jared Duhon
 Jinangkumar Shah
 
-How to use?
+How to run?
 
-Open index.html(any html file will work) in browser 
-and navigate through pages using links on right corner.
+first of all install dependecies. (requires Node JS)
+"dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "jest": "^27.5.1",
+    "pg": "^8.7.1"
+  }
+=>To install Dependencies:
+Open terminal right where you have package.json
+Run command npm install to install all dependencies.
 
-Note: Validation are added to HTML for max length and empty fields.
+
+Once you have all the dependecies open terminal and run "node app.js"
+
+Open browser, write http://localhost:5000/ in the search bar
+
+To run unit test, use "npm test"
