@@ -399,7 +399,6 @@ async function getSuggestedPrice(location, month, quoteHistory, gallons)
     let locFactor    = 0.0;
     let rhFactor     = 0.0;
     let galFactor    = 0.0;
-    let rfFactor     = 0.0;
     let margin       = 0.0;
     const compFactor = 0.10;
 
@@ -433,17 +432,8 @@ async function getSuggestedPrice(location, month, quoteHistory, gallons)
         galFactor = 0.03;
     }
 
-    // CHECK RATE FLUCTUATION
-    if(month === 6 || month === 7 || month === 8) 
-    {
-        rfFactor = 0.04;
-    } else 
-    {
-        rfFactor = 0.03;
-    }
-
     // MARGIN OF PRICE
-    margin = 1.50 * (locFactor - rhFactor + galFactor + compFactor + rfFactor);
+    margin = 1.50 * (locFactor - rhFactor + galFactor + compFactor );
     
     // SUGGESTED PRICE
     return (1.50 + margin).toFixed(2);
