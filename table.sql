@@ -4,7 +4,7 @@ DROP TABLE IF EXISTS history CASCADE;
 
 CREATE TABLE userdata (
     username VARCHAR(32) NOT NULL,
-    pass VARCHAR(32) NOT NULL,
+    pass VARCHAR(150) NOT NULL,
     PRIMARY KEY(username)
 );
 

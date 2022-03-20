@@ -5,6 +5,8 @@ const app = express()
 const cors = require('cors');
 
 const { Pool } = require('pg')
+
+const bcrypt = require('bcrypt')
 //const creds = require('./creds.json')
 
 const pool = new Pool({
@@ -61,9 +63,23 @@ app.post('/register', async(req,res) => {
 
     //add query to search for user 
     uniqueUser = true;
+
+    const check = await pool.query(`SELECT * FROM public.userdata WHERE username='${username}';`)
+    console.log(`SELECT * FROM userdata WHERE username=${username};`)
+    if(check.rowCount != 0)
+    {
+      uniqueUser = false;
+    }
+
     //uniqueUser = false
     if (uniqueUser == true)
     {
+      const hashedpass = await bcrypt.hash(password, 10)
+      console.log("Creating new user " + username + " " + password);
+      const beg_transaction = await pool.query(`BEGIN TRANSACTION;`)
+      console.log(`INSERT INTO public.userdata VALUES('${username}', '${hashedpass}');`)
+      const query = await pool.query(`INSERT INTO public.userdata VALUES('${username}', '${hashedpass}');`)
+      const end_transaction = await pool.query(`COMMIT TRANSACTION;`)
       console.log("created new user");
       //res.redirect('/profile')
     }
