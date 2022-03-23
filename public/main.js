@@ -31,8 +31,13 @@ async function getQuote(gallons, date, test)
             alert("Please enter Date")
             return false;
         }
-    
-        alert("Suggested Price: $3.55\nTotal Amount Due: $350.00")
+		
+		//TODO: calculate actual values
+		var suggestedPrice = "3.55 (PLACEHOLDER)"
+		var totalPrice = "350 (PLACEHOLDER)"
+		
+		document.querySelector("#suggested").setAttribute("value", ''.concat("$", suggestedPrice))
+		document.querySelector("#total").setAttribute("value", ''.concat("$", totalPrice))
     }
     
 
