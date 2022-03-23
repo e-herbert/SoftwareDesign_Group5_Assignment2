@@ -1,3 +1,6 @@
+// if(process.env.NODE_ENV != 'production'){
+//   require('dotnev').config()
+// }
 const express = require('express')
 
 const app = express()
@@ -8,6 +11,12 @@ const { Pool } = require('pg')
 
 const bcrypt = require('bcrypt')
 //const creds = require('./creds.json')
+//const flash = require('express-flash')
+const session = require('express-session')
+
+// const passport = require('passport')
+// const initializePassport = require('./passport-config')
+// initializePassport(passport)
 
 const pool = new Pool({
     host: 'jelani.db.elephantsql.com',
@@ -22,20 +31,51 @@ app.use(express.static('public'));
 //middleware
 app.use(cors());
 app.use(express.json());
+// app.use(flash())
+// app.use(session({
+//   secret: process.env.SESSION_SECRET,
+//   resave: fasle,
+//   saveUninitialized: false
+// }))
+// app.use(passport.initialize())
+// app.use(passport.session())
+
+app.use(session({
+	secret: 'secret',
+	resave: true,
+	saveUninitialized: true
+}));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'static')));
 
 //endpoint to authenticate user credential and send back api to client side JS for future request
 app.post('/login', async(req, res)=> {
   try{
-    const {username, password} = req.body;
+    const {userName, password} = req.body;
     var userFound = false
+    var passmatch = false
 
     //query to search user
+    const user = await pool.query(`SELECT * FROM public.userdata WHERE username='${userName}';`)
+    if(user.rowCount == 0)
+    {
+      userFound = false;
+    }
+    else if(user.rowCount == 1)
+    {
+      console.log(user.rows)
+      passfromdb = user.rows[0].pass
 
+    }
     userFound = true
     //userFound = false
 
     if (userFound == true) 
     {
+      // console.log(`SELECT * FROM public.userdata WHERE username='${userName}';`)
+      // console.log(user.rowCount)
+      // console.log(user.rows[0].pass)
         console.log("user logged in");
     }
 
