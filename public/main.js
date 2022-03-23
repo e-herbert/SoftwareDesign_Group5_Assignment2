@@ -10,44 +10,6 @@
 
 // (function($){"use strict";})(jQuery);
 
-
-async function getQuote(gallons, date, test)
-{
-    // var quote_data = document.querySelector('#quote');
-    // quote_data.innerHTML="<b>Suggested Price: $###<br/>  Total Amount Due: $###<br/>"
-    if(!test)
-    {
-        var gallons = document.querySelector("#gallons").value;
-        var date = document.querySelector("#end_date").value;
-
-        if(gallons.length <= 0)
-        {
-            alert("Please enter gallons")
-            return false;
-        }
-
-        if(date.length <= 0)
-        {
-            alert("Please enter Date")
-            return false;
-        }
-		
-		//TODO: calculate actual values
-		var suggestedPrice = "3.55 (PLACEHOLDER)"
-		var totalPrice = "350 (PLACEHOLDER)"
-		
-		document.querySelector("#suggested").setAttribute("value", ''.concat("$", suggestedPrice))
-		document.querySelector("#total").setAttribute("value", ''.concat("$", totalPrice))
-    }
-    
-
-    //use pricing module to count suggested price and total amount due
-    
-    //quote_data.innerHTML += "<b>Ticket Number: " + booking[i].ticket_no + "  |  </b>Booking Reference: " + booking[i].book_ref + "  |  Passenger ID: " + booking[i].passenger_id + "<br/>";
-    return true;
-}
-module.exports.getQuote = getQuote;
-
 async function login(userName, passwd, test)
 {
     if(!test)
@@ -398,9 +360,46 @@ async function historyQ(test)
 }
 module.exports.historyQ = historyQ
 
-//pricing module
-async function getSuggestedPrice(location, month, quoteHistory, gallons)
+async function getQuote(gallons, date, test)
 {
+    // var quote_data = document.querySelector('#quote');
+    // quote_data.innerHTML="<b>Suggested Price: $###<br/>  Total Amount Due: $###<br/>"
+    if(!test)
+    {
+        var gallons = document.querySelector("#gallons").value;
+        var date = document.querySelector("#end_date").value;
+
+        if(gallons.length <= 0)
+        {
+            alert("Please enter gallons")
+            return false;
+        }
+
+        if(date.length <= 0)
+        {
+            alert("Please enter Date")
+            return false;
+        }
+		
+		// Using pricing module to calculate suggested and total prices
+		//TODO: retrieve actual values
+		var state = 'TX' //PLACEHOLDER; get state from profile database
+		var hist = true //PLACEHOLDER; check for entries in fuel quote table
+		var suggestedPrice = await getSuggestedPrice(state, hist, gallons)//3.55 //PLACEHOLDER
+		
+		document.querySelector("#suggested").value  = '$' + suggestedPrice.toFixed(2)
+		document.querySelector("#total").value = '$' + await getTotalAmount(suggestedPrice, gallons)
+    }
+    
+	//quote_data.innerHTML += "<b>Ticket Number: " + booking[i].ticket_no + "  |  </b>Booking Reference: " + booking[i].book_ref + "  |  Passenger ID: " + booking[i].passenger_id + "<br/>";
+    return true;
+}
+module.exports.getQuote = getQuote;
+
+//pricing module
+async function getSuggestedPrice(state, quoteHistory, gallons)
+{
+	let currPrice	 = 1.5;
     let locFactor    = 0.0;
     let rhFactor     = 0.0;
     let galFactor    = 0.0;
@@ -408,7 +407,7 @@ async function getSuggestedPrice(location, month, quoteHistory, gallons)
     const compFactor = 0.10;
 
     // CHECK LOCATION FACTOR
-    if(location === 'TX')
+    if(state === 'TX')
     {
         locFactor = 0.02;
     } 
@@ -438,14 +437,14 @@ async function getSuggestedPrice(location, month, quoteHistory, gallons)
     }
 
     // MARGIN OF PRICE
-    margin = 1.50 * (locFactor - rhFactor + galFactor + compFactor );
+    margin = currPrice * (locFactor - rhFactor + galFactor + compFactor );
     
     // SUGGESTED PRICE
-    return (1.50 + margin).toFixed(2);
+    return (currPrice + margin)
 } 
 
 async function getTotalAmount(suggestedPrice, gallons)
 {
-    return (suggestedPrice * gallons).toFixed(2);
+    return parseFloat(suggestedPrice * gallons).toFixed(2);
 }
 
