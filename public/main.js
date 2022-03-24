@@ -172,15 +172,16 @@ async function profile(fullname, address1, address2, city, state, zip, test)
 
         const completed = response.json();
 
-        if (completed)
+        if (!completed)
         {
-            //location.href = "getQuote.html"
-            alert("Profile updated sucessfully")
+            alert("Please login before updating your profile");
+            location.href = "index.html";
         }
 
-        else
+        else if (completed)
         {
-            alert("Please complete profile")
+            location.href = "getQuote.html"
+            alert("Profile updated sucessfully");
         }
     }
     else{
@@ -253,15 +254,16 @@ async function regProfile(fullname, address1, address2, city, state, zip, test)
 
         const completed = response.json();
 
-        if (completed)
+        if (completed == false)
         {
-            location.href = "getQuote.html"
-            alert("Profile updated sucessfully")
+            alert("Please login before updating your profile");
+            location.href = "index.html";
         }
 
         else
         {
-            alert("Please complete profile")
+            location.href = "getQuote.html"
+            alert("Profile updated sucessfully");
         }
     }else{
         completed = true
@@ -293,6 +295,15 @@ async function historyQ(test)
         const abc = await response.json();
         console.log(abc)
 
+        if(!abc)
+        {
+            location.href = "index.html"
+            alert("Please login before viewing quote history");
+            return false;
+        }
+
+        else
+        {
             var cols = [];  
             for (var i = 0; i < abc.length; i++)
             {
@@ -331,21 +342,19 @@ async function historyQ(test)
 
             // Add the data to the table
             for (var i = 0; i < abc.length; i++) 
-            {
-                    
-            // Create a new row
-            var trow = table.insertRow(-1);
-            trow.setAttribute("class", "table100-head");
-                for (var j = 0; j < cols.length; j++) 
-                {
-                    var cell = trow.insertCell(-1);
-                    var x=j+1;
-                    cell.setAttribute("class", "column"+x);
-                        
-                    // Inserting the cell data              
-                        cell.innerHTML = abc[i][cols[j]];
-                    
-                }
+            {        
+                // Create a new row
+                var trow = table.insertRow(-1);
+                trow.setAttribute("class", "table100-head");
+                    for (var j = 0; j < cols.length; j++) 
+                    {
+                        var cell = trow.insertCell(-1);
+                        var x=j+1;
+                        cell.setAttribute("class", "column"+x);
+                            
+                        // Inserting the cell data              
+                            cell.innerHTML = abc[i][cols[j]];               
+                    }
             }
         
             //Adding the created table
@@ -353,7 +362,8 @@ async function historyQ(test)
             newTable.innerHTML = "";
             newTable.appendChild(table);
         
-        console.log("true")
+            console.log("true")
+        }        
     }
 
     return true

@@ -169,18 +169,20 @@ app.post('/profile', async(req, res)=>{
     user = req.session.username;
     console.log(user)
 
-    if(req.session.loggedin)
+    if (req.session.loggedin == undefined)
+    {     
+      console.log('User not logged in while attempting to update profile');
+      res.send(completed);
+      return false;
+    }
+
+    else
     {
       const q1 = await pool.query(`select * from public.userprofile where username='${req.session.username}';`)
       console.log(`select * from public.userprofile where username='${req.session.username}';`)
 
       if(q1.rowCount == 1) //update
       {
-        //`INSERT INTO passenger VALUES(nextval('order_passenger_id'),'${firstName}', '${lastName}', '${email}', '${phoneNum}', '${password}') RETURNING passenger_id;`
-        //`select amount from  flight_details as fd where fd.flight_id=${flightId1} and fd.fare_conditions like '${class_}';`
-        //INSERT INTO userProfile VALUES('admin', 'mr.bean', '5400 University of Houston', null, 'Houston', 'TX', '77001')
-        //`UPDATE public.profile VALUES('${req.session.username}', '${fullname}', ${address1}', null, '${city}', '${state}', '${zip}');`
-
         console.log("hello from profile about to update")
         if (address2 == "")
         {
@@ -218,9 +220,6 @@ app.post('/profile', async(req, res)=>{
       //console.log(demo.rows)
       res.send(completed);
     }
-    else{
-      res.send(false); //user not logged in
-    }
     res.end();
   }
   catch(err)
@@ -230,18 +229,27 @@ app.post('/profile', async(req, res)=>{
 
 })
 
-//endpoint to to query quote history and send back to client side javascript
+//endpoint to query quote history and send back to client side javascript
 app.post('/history', async(req, res)=>{
 
   try{
+    if (req.session.loggedin == undefined)
+    {
+      console.log('Attemp at viewing quote history while not logged in');
+      res.send(false);
+    }
+    else
+    {
+      console.log("connected to DB for unit test from /history endpoint");
+      console.log(`select date, gallons, suggested_price, total_price, address1 as address  from public.history as h, public.userProfile as p where p.username = '${req.session.username}' AND h.username = '${req.session.username}';`);
+      const demo = await pool.query(`select date, gallons, suggested_price, total_price, address1 as address from public.history as h, public.userProfile as p where p.username = '${req.session.username}' AND h.username = '${req.session.username}';`);
+      
+      console.log(demo.rows)
+      res.send(demo.rows)
+      res.end()
+    }
         //unit test
-        console.log("connected to DB for unit test from /history endpoint")
-        console.log(`select date, gallons, suggested_price, total_price, address1 as address  from public.history as h, public.userProfile as p where p.username = '${req.session.username}' AND h.username = '${req.session.username}';`)
-        const demo = await pool.query(`select date, gallons, suggested_price, total_price, address1 as address from public.history as h, public.userProfile as p where p.username = '${req.session.username}' AND h.username = '${req.session.username}';`)
         
-        console.log(demo.rows)
-        res.send(demo.rows)
-        res.end()
   }
   catch(err){
     console.log(err.message);
@@ -250,7 +258,7 @@ app.post('/history', async(req, res)=>{
 
 app.post('/getQuote', async(req, res)=>{
   try{
-    if (!req.session.loggedin)
+    if (req.session.loggedin == undefined)
     {
       console.log('user not logged in');
       //res.send(false);
@@ -260,6 +268,10 @@ app.post('/getQuote', async(req, res)=>{
     else
     {
       const {date, gallons, suggestedPrice, totalAmount} = req.body;
+      const query = await pool.query(`INSERT INTO public.history VALUES('${req.session.username}', '${date}', '${gallons}', '${suggestedPrice}', '${totalAmount}');`);
+      var rows = await pool.query(`SELECT * FROM public.history WHERE username = '${req.session.username}';`);
+      console.log(rows.rows.length);
+      console.log(`INSERT INTO public.history VALUES('${req.session.username}', '${date}', '${gallons}', '${suggestedPrice}', '${totalAmount}');`);
       console.log('Quote placed for date: ' + date + ' for ' + gallons + ' gallons. Suggested price: $' + suggestedPrice + '. Total amount: $' + totalAmount);
       res.send(true);
     }
