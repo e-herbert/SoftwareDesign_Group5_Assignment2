@@ -112,7 +112,7 @@ app.post('/login', async(req, res)=> {
   }
 })
 
-//endpoint to register user, the idea right not is to use bycrypt to encryt password and send back api to client side JS for future request
+//endpoint to register user, the idea right now is to use bycrypt to encryt password and send back api to client side JS for future request
 app.post('/register', async(req,res) => {
   try{
     const {username, password} = req.body;
@@ -237,7 +237,7 @@ app.post('/history', async(req, res)=>{
         //unit test
         console.log("connected to DB for unit test from /history endpoint")
         console.log(`select date, gallons, suggested_price, total_price, address1 as address  from public.history as h, public.userProfile as p where p.username = '${req.session.username}' AND h.username = '${req.session.username}';`)
-        const demo = await pool.query(`select date, gallons, suggested_price, total_price, address1 as address  from public.history as h, public.userProfile as p where p.username = '${req.session.username}' AND h.username = '${req.session.username}';`)
+        const demo = await pool.query(`select date, gallons, suggested_price, total_price, address1 as address from public.history as h, public.userProfile as p where p.username = '${req.session.username}' AND h.username = '${req.session.username}';`)
         
         console.log(demo.rows)
         res.send(demo.rows)
@@ -245,6 +245,27 @@ app.post('/history', async(req, res)=>{
   }
   catch(err){
     console.log(err.message);
+  }
+})
+
+app.post('/getQuote', async(req, res)=>{
+  try{
+    if (!req.session.loggedin)
+    {
+      console.log('user not logged in');
+      //res.send(false);
+      res.send(false);
+    }
+
+    else
+    {
+      const {date, gallons, suggestedPrice, totalAmount} = req.body;
+      console.log('Quote placed for date: ' + date + ' for ' + gallons + ' gallons. Suggested price: $' + suggestedPrice + '. Total amount: $' + totalAmount);
+      res.send(true);
+    }
+    
+  } catch(err){
+    console.log(err.message)
   }
 })
 

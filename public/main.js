@@ -386,9 +386,36 @@ async function getQuote(gallons, date, test)
 		var state = 'TX' //PLACEHOLDER; get state from profile database
 		var hist = true //PLACEHOLDER; check for entries in fuel quote table
 		var suggestedPrice = await getSuggestedPrice(state, hist, gallons)//3.55 //PLACEHOLDER
+
+        var totalAmount = await getTotalAmount(suggestedPrice, gallons)
 		
 		document.querySelector("#suggested").value  = '$' + suggestedPrice.toFixed(2)
-		document.querySelector("#total").value = '$' + await getTotalAmount(suggestedPrice, gallons)
+		document.querySelector("#total").value = '$' + totalAmount
+
+        const body = {gallons:gallons, date:date, state:state, suggestedPrice:suggestedPrice, totalAmount:totalAmount}
+
+        const response = await fetch("http://localhost:5000/getQuote", 
+        {        
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body)
+        });
+
+        const res = await response.json();
+
+        console.log(res);
+
+        if (res == false)
+        {
+            location.href = "index.html"
+            alert("Please login before requesting a quote.");
+            return false;
+        }
+
+        else
+        {
+            alert("Thank you for using our app. Your quote has been submitted.");
+        }
     }
     
 	//quote_data.innerHTML += "<b>Ticket Number: " + booking[i].ticket_no + "  |  </b>Booking Reference: " + booking[i].book_ref + "  |  Passenger ID: " + booking[i].passenger_id + "<br/>";
