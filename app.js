@@ -50,7 +50,7 @@ app.use(express.urlencoded({ extended: true }));
 
 
 //endpoint to authenticate user credential and send back api to client side JS for future request
-app.post('/login', async(req, res)=> {
+app.post('/login', checkNotAuthenticated, async(req, res)=> {
   try{
     const {userName, password} = req.body;
     var userFound = false
@@ -113,13 +113,12 @@ app.post('/login', async(req, res)=> {
 })
 
 //endpoint to register user, the idea right now is to use bycrypt to encryt password and send back api to client side JS for future request
-app.post('/register', async(req,res) => {
+app.post('/register', checkNotAuthenticated , async(req,res) => {
   try{
     const {username, password} = req.body;
-    var uniqueUser = false;
+    var uniqueUser = true;
 
-    //add query to search for user 
-    uniqueUser = true;
+    //add query to search for user in DB
 
     const check = await pool.query(`SELECT * FROM public.userdata WHERE username='${username}';`)
     console.log(`SELECT * FROM userdata WHERE username=${username};`)
@@ -138,6 +137,10 @@ app.post('/register', async(req,res) => {
       const query = await pool.query(`INSERT INTO public.userdata VALUES('${username}', '${hashedpass}');`)
       const end_transaction = await pool.query(`COMMIT TRANSACTION;`)
       console.log("created new user");
+      req.session.loggedin = true;
+			req.session.username = username;
+      console.log("user logged in: " + req.session.username);
+
       //res.redirect('/profile')
     }
 
@@ -148,9 +151,6 @@ app.post('/register', async(req,res) => {
     }
     //unit test
     console.log("connected to DB for unit test from /register endpoint")
-    const demo = await pool.query(`select * from public.history;`)
-    //console.log(demo.rows)
-
     res.send(uniqueUser);
     res.end();
 
@@ -161,7 +161,7 @@ app.post('/register', async(req,res) => {
 })
 
 //endpoint to update profile 
-app.post('/profile', async(req, res)=>{
+app.post('/profile', checkAuthenticated, async(req, res)=>{
   try
   {
     const {fullname, address1, address2, city, state, zip} = req.body;
@@ -169,58 +169,52 @@ app.post('/profile', async(req, res)=>{
     user = req.session.username;
     console.log(user)
 
-    if(req.session.loggedin)
+    const q1 = await pool.query(`select * from public.userprofile where username='${req.session.username}';`)
+    console.log(`select * from public.userprofile where username='${req.session.username}';`)
+
+    if(q1.rowCount == 1) //update
     {
-      const q1 = await pool.query(`select * from public.userprofile where username='${req.session.username}';`)
-      console.log(`select * from public.userprofile where username='${req.session.username}';`)
+      //`INSERT INTO passenger VALUES(nextval('order_passenger_id'),'${firstName}', '${lastName}', '${email}', '${phoneNum}', '${password}') RETURNING passenger_id;`
+      //`select amount from  flight_details as fd where fd.flight_id=${flightId1} and fd.fare_conditions like '${class_}';`
+      //INSERT INTO userProfile VALUES('admin', 'mr.bean', '5400 University of Houston', null, 'Houston', 'TX', '77001')
+      //`UPDATE public.profile VALUES('${req.session.username}', '${fullname}', ${address1}', null, '${city}', '${state}', '${zip}');`
 
-      if(q1.rowCount == 1) //update
+      console.log("hello from profile about to update")
+      if (address2 == "")
       {
-        //`INSERT INTO passenger VALUES(nextval('order_passenger_id'),'${firstName}', '${lastName}', '${email}', '${phoneNum}', '${password}') RETURNING passenger_id;`
-        //`select amount from  flight_details as fd where fd.flight_id=${flightId1} and fd.fare_conditions like '${class_}';`
-        //INSERT INTO userProfile VALUES('admin', 'mr.bean', '5400 University of Houston', null, 'Houston', 'TX', '77001')
-        //`UPDATE public.profile VALUES('${req.session.username}', '${fullname}', ${address1}', null, '${city}', '${state}', '${zip}');`
+        await pool.query(`UPDATE public.userprofile SET fullname = '${fullname}', address1 = '${address1}', address2 = null, city = '${city}', state = '${state}', zipcode = '${zip}' WHERE username = '${user}';`)
+        console.log(`UPDATE public.userprofile SET fullname = '${fullname}', address1 = '${address1}', city = '${city}', state = '${state}', zipcode = '${zip}' WHERE username = '${user}';`)
+      } 
 
-        console.log("hello from profile about to update")
-        if (address2 == "")
-        {
-          await pool.query(`UPDATE public.userprofile SET fullname = '${fullname}', address1 = '${address1}', city = '${city}', state = '${state}', zipcode = '${zip}' WHERE username = '${user}';`)
-          console.log(`UPDATE public.userprofile SET fullname = '${fullname}', address1 = '${address1}', city = '${city}', state = '${state}', zipcode = '${zip}' WHERE username = '${user}';`)
-        } 
-
-        else
-        {
-          await pool.query(`UPDATE public.userprofile SET fullname = '${fullname}', address1 = '${address1}', address2 = '${address2}', city = '${city}', state = '${state}', zipcode = '${zip}' WHERE username = '${user}';`)
-          console.log(`UPDATE public.userprofile SET fullname = '${fullname}', address1 = '${address1}', address2 = '${address2}', city = '${city}', state = '${state}', zipcode = '${zip}' WHERE username = '${user}';`)
-        }
+      else
+      {
+        await pool.query(`UPDATE public.userprofile SET fullname = '${fullname}', address1 = '${address1}', address2 = '${address2}', city = '${city}', state = '${state}', zipcode = '${zip}' WHERE username = '${user}';`)
+        console.log(`UPDATE public.userprofile SET fullname = '${fullname}', address1 = '${address1}', address2 = '${address2}', city = '${city}', state = '${state}', zipcode = '${zip}' WHERE username = '${user}';`)
       }
-
-      else{
-        console.log("hello from profile about to insert")
-        if (address2 == "")
-        {
-          await pool.query(`INSERT INTO public.userprofile VALUES('${req.session.username}', '${fullname}','${address1}', null, '${city}', '${state}', '${zip}');`)
-          console.log(`INSERT INTO public.userprofile VALUES('${req.session.username}', '${fullname}', ${address1}', null, '${city}', '${state}', '${zip}');`)
-        } 
-
-        else
-        {
-          await pool.query(`INSERT INTO public.userprofile VALUES('${req.session.username}', '${fullname}', '${address1}', '${address2}', '${city}', '${state}', '${zip}');`)
-          console.log(`INSERT INTO public.userprofile VALUES('${req.session.username}', '${fullname}', ${address1}', '${address2}', '${city}', '${state}', '${zip}');`)
-        }
-      }
-
-      completed = true
-      console.log("Profile updated")
-      //unit test
-      console.log("connected to DB for unit test from /profile endpoint")
-      //const demo = await pool.query(`select * from public.history;`)
-      //console.log(demo.rows)
-      res.send(completed);
     }
+
     else{
-      res.send(false); //user not logged in
+      console.log("hello from profile about to insert")
+      if (address2 == "")
+      {
+        await pool.query(`INSERT INTO public.userprofile VALUES('${req.session.username}', '${fullname}','${address1}', null, '${city}', '${state}', '${zip}');`)
+        console.log(`INSERT INTO public.userprofile VALUES('${req.session.username}', '${fullname}', ${address1}', null, '${city}', '${state}', '${zip}');`)
+      } 
+
+      else
+      {
+        await pool.query(`INSERT INTO public.userprofile VALUES('${req.session.username}', '${fullname}', '${address1}', '${address2}', '${city}', '${state}', '${zip}');`)
+        console.log(`INSERT INTO public.userprofile VALUES('${req.session.username}', '${fullname}', ${address1}', '${address2}', '${city}', '${state}', '${zip}');`)
+      }
     }
+
+    completed = true
+    console.log("Profile updated")
+    //unit test
+    console.log("connected to DB for unit test from /profile endpoint")
+    //const demo = await pool.query(`select * from public.history;`)
+    //console.log(demo.rows)
+    res.send(completed);    
     res.end();
   }
   catch(err)
@@ -231,7 +225,7 @@ app.post('/profile', async(req, res)=>{
 })
 
 //endpoint to to query quote history and send back to client side javascript
-app.post('/history', async(req, res)=>{
+app.post('/history', checkAuthenticated, async(req, res)=>{
 
   try{
         //unit test
@@ -248,7 +242,7 @@ app.post('/history', async(req, res)=>{
   }
 })
 
-app.post('/getQuote', async(req, res)=>{
+app.post('/getQuote', checkAuthenticated, async(req, res)=>{
   try{
     if (!req.session.loggedin)
     {
@@ -269,6 +263,50 @@ app.post('/getQuote', async(req, res)=>{
   }
 })
 
+app.post('/signout', checkAuthenticated,(req, res) => {
+  if (req.session.loggedin) {
+    req.session.destroy(err => {
+      if (err) {
+        res.send(false)
+      } else {
+        console.log("user signed out")
+        console.log(req.session)
+        res.send(true)
+      }
+    });
+  } else {
+    res.send(false)
+    res.end()
+  }
+})
+
+app.post('/checklogin', (req, res) => {
+  if(req.session.loggedin)
+  {
+    res.send(true)
+  }
+  else
+  {
+    res.send(false)
+  }
+})
+
+
+function checkAuthenticated(req, res, next) {
+  if(req.session.loggedin) {
+    return next();
+  } else {
+    res.redirect('/login');
+  }
+}
+
+function checkNotAuthenticated(req, res, next) {
+  if(req.session.loggedin) {
+    res.redirect('/');
+  } else {
+    return next();
+  }
+}
 
 
 app.listen(5000, () => {

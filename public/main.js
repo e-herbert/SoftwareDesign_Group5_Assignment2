@@ -90,10 +90,11 @@ async function register(username, password, test)
                 body: JSON.stringify(body)
             } ); 
 
-            const uniqueUser = response.json();
+            const uniqueUser = await response.json();
 
             if (uniqueUser)
             {
+                alert("User created successfully")
                 location.href = "regProfile.html"
             }
             else
@@ -170,24 +171,24 @@ async function profile(fullname, address1, address2, city, state, zip, test)
             body: JSON.stringify(body)
         } ); 
 
-        const completed = response.json();
+        const completed = await response.json();
 
         if (completed)
         {
             //location.href = "getQuote.html"
             alert("Profile updated sucessfully")
+            return completed;
         }
 
         else
         {
             alert("Please complete profile")
+            return completed;
         }
     }
     else{
-        completed = true;
+        return true;
     }
-
-    return completed;
 }
 module.exports.profile = profile
 //Function to update profile when user register 
@@ -251,23 +252,23 @@ async function regProfile(fullname, address1, address2, city, state, zip, test)
             body: JSON.stringify(body)
         } ); 
 
-        const completed = response.json();
+        const completed = await response.json();
 
         if (completed)
         {
             location.href = "getQuote.html"
             alert("Profile updated sucessfully")
+            return completed;
         }
 
         else
         {
             alert("Please complete profile")
+            return completed;
         }
     }else{
-        completed = true
+        return true
     }
-
-    return completed;
 }
 module.exports.regProfile= regProfile;
 //trial function
@@ -423,6 +424,23 @@ async function getQuote(gallons, date, test)
 }
 module.exports.getQuote = getQuote;
 
+async function signout()
+{    
+    const response = await fetch("http://localhost:5000/signout", 
+    {        
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        //body: JSON.stringify(body)
+    });
+    const abc = await response.json();
+    console.log(abc)
+    if(abc)
+        location.href = "index.html"
+    else
+        alert("Signout failed")
+    return abc
+}
+
 //pricing module
 async function getSuggestedPrice(state, quoteHistory, gallons)
 {
@@ -469,6 +487,29 @@ async function getSuggestedPrice(state, quoteHistory, gallons)
     // SUGGESTED PRICE
     return (currPrice + margin)
 } 
+
+async function checklogin()
+{
+    const response = await fetch("http://localhost:5000/checklogin", 
+    {        
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        //body: JSON.stringify(body)
+    });
+    const abc = await response.json();
+    if(!abc)
+    {
+        location.href = "index.html"
+        alert("OPPS! You are not logged in. Please login to continue.");
+        return false;
+    }
+    else{
+        return true;
+    }
+
+    return abc;
+}
+
 
 async function getTotalAmount(suggestedPrice, gallons)
 {
