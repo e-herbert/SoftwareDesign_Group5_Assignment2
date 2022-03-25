@@ -92,7 +92,7 @@ app.post('/login', checkNotAuthenticated, async(req, res)=> {
       // console.log(`SELECT * FROM public.userdata WHERE username='${userName}';`)
       // console.log(user.rowCount)
       // console.log(user.rows[0].pass)
-		console.log("/login> loggedin = " + req.session.loggedin);
+		//console.log("/login> loggedin = " + req.session.loggedin);
         console.log("/login> user logged in: " + req.session.username);
 		//console.log("/login> req = " + req)
     }
@@ -244,6 +244,27 @@ app.post('/history', checkAuthenticated, async(req, res)=>{
   }
 })
 
+// endpoint to retrieve info needed to calculate suggested price
+app.post('/quoteInfo', checkAuthenticated, async(req, res) => {
+	console.log("/quoteInfo> Retrieving quote info for user '" + req.session.username + "'")
+	try{
+		user = req.session.username;
+		hasHist = await pool.query(`SELECT * FROM public.history WHERE username='${user}';`).rowCount > 0;
+		state = await pool.query(`SELECT state FROM public.userprofile WHERE username='${user}';`);
+		state = state.rows[0]['state'];
+		
+		console.log("/quoteInfo> Has history: " + hasHist);
+		console.log("/quoteInfo> State: " + state);
+		
+		res.send([hasHist, state]);
+		res.end();
+	}
+	catch(err){
+		console.log("/quoteInfo> " + err)
+	}
+})
+
+// endpoint to add quotes to quote history table
 app.post('/submitQuote', checkAuthenticated, async(req, res)=>{
 	console.log("/submitQuote> successfully called")
 	try{
@@ -284,20 +305,9 @@ app.post('/signout', checkAuthenticated,(req, res) => {
 })
 
 app.post('/checklogin', function(req, res) {//=> {
-  /*
-  if(req.session.loggedin)
-  {
-    res.send(true)
-  }
-  else
-  {
-    res.send(false)
-  }
-  //*/
-  console.log("/checklogin> username = " + req.session.username)
-  console.log("/checklogin> loggedin = " + req.session.loggedin)
-  //console.log("/checklogin> req = " + req)
-  res.send(req.session.loggedin == true)
+	//console.log("/checklogin> username = " + req.session.username)
+	//console.log("/checklogin> loggedin = " + req.session.loggedin)
+	res.send(req.session.loggedin == true)
 })
 
 
@@ -316,7 +326,6 @@ function checkNotAuthenticated(req, res, next) {
     return next();
   }
 }
-
 
 app.listen(5000, () => {
     console.log('server is up and running')

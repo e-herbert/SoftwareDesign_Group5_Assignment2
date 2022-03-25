@@ -319,12 +319,6 @@ async function signout()
     return abc
 }
 
-//trial function
-function trail()
-{
-    //alert("from main.js!!!!!!!!!!")
-    return true;
-}
 
 //function to connect quote history page and keep quotehistory page updated from back end
 async function historyQ(test)
@@ -409,10 +403,30 @@ async function historyQ(test)
 }
 module.exports.historyQ = historyQ
 
+async function getQuoteInfo(){
+	try{
+		const response = await fetch("http://localhost:5000/quoteInfo",
+		{
+			method: "POST",
+			headers: { "Content-Type": "application/json" }
+		});
+		
+		const vals = await response.json();
+		document.querySelector("#suggested").hasHistory = vals[0];
+		document.querySelector("#suggested").state = vals[1];
+	}
+	catch(err){
+		alert(err);
+	}
+}
+
 async function getQuote(gallons, date, test)
 {
     // var quote_data = document.querySelector('#quote');
     // quote_data.innerHTML="<b>Suggested Price: $###<br/>  Total Amount Due: $###<br/>"
+	var state = document.querySelector("#suggested").state;
+	var hist = document.querySelector("#suggested").hasHistory;
+	
     if(!test)
     {
         var gallons = document.querySelector("#gallons").value;
@@ -420,9 +434,13 @@ async function getQuote(gallons, date, test)
 
         if(gallons.length <= 0)
         {
-            alert("Please enter gallons")
+            alert("Please enter gallon amount");
             return false;
         }
+		else if(parseFloat(gallons) <= 0){
+			alert("Invalid gallon amount");
+			return false;
+		}
 
         if(date.length <= 0)
         {
@@ -431,9 +449,6 @@ async function getQuote(gallons, date, test)
         }
 		
 		// Using pricing module to calculate suggested and total prices
-		//TODO: retrieve actual values
-		var state = 'TX' //PLACEHOLDER; get state from profile database
-		var hist = true //PLACEHOLDER; check for entries in fuel quote table
 		var suggestedPrice = await getSuggestedPrice(state, hist, gallons)
 		var totalAmount = await getTotalAmount(suggestedPrice, gallons)
 		
@@ -441,20 +456,18 @@ async function getQuote(gallons, date, test)
 		document.querySelector("#suggested").value  = '$' + suggestedPrice
 		document.querySelector("#total").rawvalue = totalAmount
 		document.querySelector("#total").value = '$' + totalAmount.toFixed(2)
-    }
+	}
     
 	//quote_data.innerHTML += "<b>Ticket Number: " + booking[i].ticket_no + "  |  </b>Booking Reference: " + booking[i].book_ref + "  |  Passenger ID: " + booking[i].passenger_id + "<br/>";
     return true;
 }
 module.exports.getQuote = getQuote;
 
-//TODO: fix JSOn syntax error
 async function submitQuote(){
 	try{
 		var gallons = document.querySelector("#gallons").value;
 		var date = document.querySelector("#end_date").value;
-		//TODO: retrieve actual value
-		var state = 'TX'; //PLACEHOLDER; get state from profile database
+		var state = document.querySelector("#suggested").state;
 		var suggestedPrice = document.querySelector("#suggested").rawvalue;
 		var totalPrice = document.querySelector("#total").rawvalue;
 		
@@ -464,7 +477,6 @@ async function submitQuote(){
 		}
 		
 		const body = { gallons : gallons, date : date, state : state, suggestedPrice : suggestedPrice, totalAmount : totalPrice };
-		//alert(JSON.stringify(body))
 		const response = await fetch("http://localhost:5000/submitQuote",
 		{
 			method: "POST",
@@ -473,7 +485,7 @@ async function submitQuote(){
 		} ); 
 		
 		const submitted = await response.json();
-		//alert("did the thing")
+		
 		console.log(submitted);
 
 		if (!submitted)
