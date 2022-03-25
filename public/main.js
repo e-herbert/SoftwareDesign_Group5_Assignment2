@@ -12,53 +12,81 @@
 
 async function login(userName, passwd, test)
 {
-    if(!test)
-    {
-        var userName = document.querySelector("#user").value;
-        var passwd = document.querySelector('#pass').value;
+	try{
+		if(!test)
+		{
+			var userName = document.querySelector("#user").value;
+			var passwd = document.querySelector('#pass').value;
 
 
-        if(userName == "") 
-        {
-            alert("Empty username");
-            return false;
-        } 
-        else if(passwd == "") 
-        {
-            alert("Empty password");
-            return false;
-        }
-    
-        //console.log("T")
-        //validating login details with the DB
-        const body = { userName : userName, password : passwd }; 
-        // connect to heroku, remove localhost:port
-        const response = await fetch("http://localhost:5000/login", 
-        {        
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(body)
-        } ); 
+			if(userName == "") 
+			{
+				alert("Empty username");
+				return false;
+			} 
+			else if(passwd == "") 
+			{
+				alert("Empty password");
+				return false;
+			}
+		
+			//console.log("T")
+			//validating login details with the DB
+			const body = { userName : userName, password : passwd }; 
+			//alert(JSON.stringify(body))
+			// connect to heroku, remove localhost:port
+			const response = await fetch("http://localhost:5000/login", 
+			{        
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(body)
+			} ); 
 
-        const creds = await response.json();
+			const creds = await response.json();
 
-        if (creds == true)
-        {
-            location.href = "getQuote.html"
-        }
-        else
-        {
-            alert("Invalid username or password. Please try again.")
-        }
-    }else{
-        creds=true;
-    }
-    
-    console.log(creds);
+			if (creds == true)
+			{
+				location.href = "getQuote.html"
+			}
+			else
+			{
+				alert("Invalid username or password. Please try again.")
+			}
+		}else{
+			creds=true;
+		}
+		
+		console.log(creds);
 
-    return creds;
+		return creds;
+	}
+	catch(err){
+		alert(err);
+	}
 }
 module.exports.login = login;
+
+async function checklogin()
+{
+    const response = await fetch("http://localhost:5000/checklogin", 
+    {        
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        //body: JSON.stringify(body)
+    });
+    const abc = await response.json();
+    if(!abc)
+    {
+		alert("OOPS! You are not logged in. Please login to continue.");
+        location.href = "index.html"
+        return false;
+    }
+    else{
+        return true;
+    }
+
+    return abc;
+}
 
 //function to get data from register.html
 async function register(username, password, test)
@@ -110,6 +138,7 @@ async function register(username, password, test)
     return uniqueUser;
 }
 module.exports.register = register
+
 //function to update profile 
 async function profile(fullname, address1, address2, city, state, zip, test)
 {
@@ -191,6 +220,7 @@ async function profile(fullname, address1, address2, city, state, zip, test)
     }
 }
 module.exports.profile = profile
+
 //Function to update profile when user register 
 async function regProfile(fullname, address1, address2, city, state, zip, test)
 {
@@ -271,6 +301,24 @@ async function regProfile(fullname, address1, address2, city, state, zip, test)
     }
 }
 module.exports.regProfile= regProfile;
+
+async function signout()
+{    
+    const response = await fetch("http://localhost:5000/signout", 
+    {        
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        //body: JSON.stringify(body)
+    });
+    const abc = await response.json();
+    console.log(abc)
+    if(abc)
+        location.href = "index.html"
+    else
+        alert("Signout failed")
+    return abc
+}
+
 //trial function
 function trail()
 {
@@ -386,37 +434,13 @@ async function getQuote(gallons, date, test)
 		//TODO: retrieve actual values
 		var state = 'TX' //PLACEHOLDER; get state from profile database
 		var hist = true //PLACEHOLDER; check for entries in fuel quote table
-		var suggestedPrice = await getSuggestedPrice(state, hist, gallons)//3.55 //PLACEHOLDER
-
-        var totalAmount = await getTotalAmount(suggestedPrice, gallons)
+		var suggestedPrice = await getSuggestedPrice(state, hist, gallons)
+		var totalAmount = await getTotalAmount(suggestedPrice, gallons)
 		
-		document.querySelector("#suggested").value  = '$' + suggestedPrice.toFixed(2)
-		document.querySelector("#total").value = '$' + totalAmount
-
-        const body = {gallons:gallons, date:date, state:state, suggestedPrice:suggestedPrice, totalAmount:totalAmount}
-
-        const response = await fetch("http://localhost:5000/getQuote", 
-        {        
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(body)
-        });
-
-        const res = await response.json();
-
-        console.log(res);
-
-        if (res == false)
-        {
-            location.href = "index.html"
-            alert("Please login before requesting a quote.");
-            return false;
-        }
-
-        else
-        {
-            alert("Thank you for using our app. Your quote has been submitted.");
-        }
+		document.querySelector("#suggested").rawvalue  = suggestedPrice
+		document.querySelector("#suggested").value  = '$' + suggestedPrice
+		document.querySelector("#total").rawvalue = totalAmount
+		document.querySelector("#total").value = '$' + totalAmount.toFixed(2)
     }
     
 	//quote_data.innerHTML += "<b>Ticket Number: " + booking[i].ticket_no + "  |  </b>Booking Reference: " + booking[i].book_ref + "  |  Passenger ID: " + booking[i].passenger_id + "<br/>";
@@ -424,22 +448,51 @@ async function getQuote(gallons, date, test)
 }
 module.exports.getQuote = getQuote;
 
-async function signout()
-{    
-    const response = await fetch("http://localhost:5000/signout", 
-    {        
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        //body: JSON.stringify(body)
-    });
-    const abc = await response.json();
-    console.log(abc)
-    if(abc)
-        location.href = "index.html"
-    else
-        alert("Signout failed")
-    return abc
+//TODO: fix JSOn syntax error
+async function submitQuote(){
+	try{
+		var gallons = document.querySelector("#gallons").value;
+		var date = document.querySelector("#end_date").value;
+		//TODO: retrieve actual value
+		var state = 'TX'; //PLACEHOLDER; get state from profile database
+		var suggestedPrice = document.querySelector("#suggested").rawvalue;
+		var totalPrice = document.querySelector("#total").rawvalue;
+		
+		if(suggestedPrice == undefined || totalPrice == undefined){
+			alert("You must calculate a quote before submitting");
+			return false;
+		}
+		
+		const body = { gallons : gallons, date : date, state : state, suggestedPrice : suggestedPrice, totalAmount : totalPrice };
+		//alert(JSON.stringify(body))
+		const response = await fetch("http://localhost:5000/submitQuote",
+		{
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify(body)
+		} ); 
+		
+		const submitted = await response.json();
+		//alert("did the thing")
+		console.log(submitted);
+
+		if (!submitted)
+		{
+			alert("Please login before requesting a quote.");
+			location.href = "index.html"
+			return false;
+		}
+
+		else
+		{
+			alert("Thank you for using our app. Your quote has been submitted.");
+		}
+	}
+	catch(err){
+		alert(err);
+	}
 }
+module.exports.submitQuote = submitQuote;
 
 //pricing module
 async function getSuggestedPrice(state, quoteHistory, gallons)
@@ -449,7 +502,7 @@ async function getSuggestedPrice(state, quoteHistory, gallons)
     let rhFactor     = 0.0;
     let galFactor    = 0.0;
     let margin       = 0.0;
-    const compFactor = 0.10;
+    const compFactor = 0.1;
 
     // CHECK LOCATION FACTOR
     if(state === 'TX')
@@ -462,7 +515,7 @@ async function getSuggestedPrice(state, quoteHistory, gallons)
     }
 
     // CHECK QUOTE HISTORY
-    if(quoteHistory === undefined) 
+    if(quoteHistory) 
     {
         rhFactor = 0.01;
     } 
@@ -482,37 +535,14 @@ async function getSuggestedPrice(state, quoteHistory, gallons)
     }
 
     // MARGIN OF PRICE
-    margin = currPrice * (locFactor - rhFactor + galFactor + compFactor );
+    margin = currPrice * (locFactor - rhFactor + galFactor + compFactor);
     
     // SUGGESTED PRICE
     return (currPrice + margin)
 } 
 
-async function checklogin()
-{
-    const response = await fetch("http://localhost:5000/checklogin", 
-    {        
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        //body: JSON.stringify(body)
-    });
-    const abc = await response.json();
-    if(!abc)
-    {
-        location.href = "index.html"
-        alert("OPPS! You are not logged in. Please login to continue.");
-        return false;
-    }
-    else{
-        return true;
-    }
-
-    return abc;
-}
-
-
 async function getTotalAmount(suggestedPrice, gallons)
 {
-    return parseFloat(suggestedPrice * gallons).toFixed(2);
+    return parseFloat(suggestedPrice * gallons);
 }
 

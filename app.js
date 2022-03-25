@@ -92,7 +92,9 @@ app.post('/login', checkNotAuthenticated, async(req, res)=> {
       // console.log(`SELECT * FROM public.userdata WHERE username='${userName}';`)
       // console.log(user.rowCount)
       // console.log(user.rows[0].pass)
-        console.log("user logged in: " + req.session.username);
+		console.log("/login> loggedin = " + req.session.loggedin);
+        console.log("/login> user logged in: " + req.session.username);
+		//console.log("/login> req = " + req)
     }
 
     else
@@ -242,25 +244,26 @@ app.post('/history', checkAuthenticated, async(req, res)=>{
   }
 })
 
-app.post('/getQuote', checkAuthenticated, async(req, res)=>{
-  try{
-    if (!req.session.loggedin)
-    {
-      console.log('user not logged in');
-      //res.send(false);
-      res.send(false);
-    }
+app.post('/submitQuote', checkAuthenticated, async(req, res)=>{
+	console.log("/submitQuote> successfully called")
+	try{
+		if (!req.session.loggedin)
+		{
+		  console.log('user not logged in');
+		  //res.send(false);
+		  res.send(false);
+		}
 
-    else
-    {
-      const {date, gallons, suggestedPrice, totalAmount} = req.body;
-      console.log('Quote placed for date: ' + date + ' for ' + gallons + ' gallons. Suggested price: $' + suggestedPrice + '. Total amount: $' + totalAmount);
-      res.send(true);
-    }
+		else
+		{
+		  const {date, gallons, suggestedPrice, totalAmount} = req.body;
+		  console.log('Quote placed for date: ' + date + ' for ' + gallons + ' gallons. Suggested price: $' + suggestedPrice + '. Total amount: $' + totalAmount);
+		  res.send(true);
+		}
     
-  } catch(err){
-    console.log(err.message)
-  }
+	} catch(err){
+		console.log(err.message)
+	}
 })
 
 app.post('/signout', checkAuthenticated,(req, res) => {
@@ -280,7 +283,8 @@ app.post('/signout', checkAuthenticated,(req, res) => {
   }
 })
 
-app.post('/checklogin', (req, res) => {
+app.post('/checklogin', function(req, res) {//=> {
+  /*
   if(req.session.loggedin)
   {
     res.send(true)
@@ -289,6 +293,11 @@ app.post('/checklogin', (req, res) => {
   {
     res.send(false)
   }
+  //*/
+  console.log("/checklogin> username = " + req.session.username)
+  console.log("/checklogin> loggedin = " + req.session.loggedin)
+  //console.log("/checklogin> req = " + req)
+  res.send(req.session.loggedin == true)
 })
 
 

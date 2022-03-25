@@ -72,12 +72,12 @@
 				
 				<div class="col-12" style="margin-top:30px">
                 <label style="margin-bottom:0px" for="suggestedprice" class="form-label">Suggested Price per Gallon</label>
-                <input style="margin-bottom:10px" type="text" class="form-control" id="suggested" value="Click 'Get Quote'" readonly>
+                <input style="margin-bottom:10px" type="text" class="form-control" id="suggested" value="Click 'Get Quote'" rawvalue=-1 readonly>
 				
                 <label style="margin-bottom:0px" for="totalprice" class="form-label">Total Price</label>
-                <input style="margin-bottom:10px" type="text" class="form-control" id="total" value="Click 'Get Quote'" readonly>
+                <input style="margin-bottom:10px" type="text" class="form-control" id="total" value="Click 'Get Quote'" rawvalue=-1 readonly>
 
-                <button style="margin-top:10px" type="submit" class="btn btn-primary" onclick="">Submit</button>
+                <button style="margin-top:10px" type="button" class="btn btn-primary" onclick="submitQuote()">Submit</button>
                 </div>
             </fieldset>  
             <p id="quote"> </p>        
