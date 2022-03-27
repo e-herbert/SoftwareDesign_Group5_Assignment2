@@ -232,8 +232,8 @@ app.post('/history', checkAuthenticated, async(req, res)=>{
   try{
         //unit test
         console.log("connected to DB for unit test from /history endpoint")
-        console.log(`select date, gallons, suggested_price, total_price, address1 as address  from public.history as h, public.userProfile as p where p.username = '${req.session.username}' AND h.username = '${req.session.username}';`)
-        const demo = await pool.query(`select date, gallons, suggested_price, total_price, address1 as address from public.history as h, public.userProfile as p where p.username = '${req.session.username}' AND h.username = '${req.session.username}';`)
+        console.log(`SELECT date, gallons, suggested_price, total_price, address1 as address  FROM public.history as h, public.userProfile as p WHERE p.username = '${req.session.username}' AND h.username = '${req.session.username}';`)
+        const demo = await pool.query(`SELECT date, gallons, suggested_price, total_price, address1 as address FROM public.history as h, public.userProfile as p WHERE p.username = '${req.session.username}' AND h.username = '${req.session.username}';`)
         
         console.log(demo.rows)
         res.send(demo.rows)

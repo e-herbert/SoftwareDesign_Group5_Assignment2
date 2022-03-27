@@ -51,14 +51,15 @@ async function login(userName, passwd, test)
 			else
 			{
 				alert("Invalid username or password. Please try again.")
+                return creds;
 			}
 		}else{
-			creds=true;
+			return true
 		}
 		
-		console.log(creds);
+		
 
-		return creds;
+		return true;
 	}
 	catch(err){
 		alert(err);
