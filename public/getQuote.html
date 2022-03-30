@@ -33,7 +33,7 @@
                         <li class="nav-item"><a href="quotehistory.html" class="nav-link text-uppercase font-weight-bold" >Quote History</a></li>
                         <!-- <li class="nav-item"><a href="register.html" class="nav-link text-uppercase font-weight-bold">Register</a></li> -->
                         <li class="nav-item"><a href="profile.html" class="nav-link text-uppercase font-weight-bold">Profile</a></li>
-                        <li class="nav-item"><a href="index.html" class="nav-link text-uppercase font-weight-bold">Sign Out</a></li>
+                        <li class="nav-item"><button type="button" class="btn btn-primary" onclick="signout()">Sign Out</button></li>
                     </ul>
                 </div>
             </div>
@@ -45,41 +45,45 @@
     
 </body>
 
+	<script>
+		checklogin()
+		getQuoteInfo()
+	</script>
 
 
     <span class="border">
         <div class="form">
             <form> 
                 <fieldset>          
-                <div class="col-12">
-                <label style="margin-bottom:0px" for="inputgallon" class="form-label">Gallons Requested</label>
-                <input style="margin-bottom:10px" type="number" class="form-control" id="gallons" required>
-                
-                <label style="margin-bottom:0px" for="inputAddress" class="form-label">Address</label>
-                <input style="margin-bottom:10px" type="text" class="form-control" id="inputAddress" value="From your profile" aria-label="readonly input example" readonly>
-                
-                <label style="margin-bottom:0px" for="delivery-date">Delivery Date</label>
-                <input style="margin-bottom:0px" class="form-control" type="date" id="end_date" name="delivery-date"
-                    value=""
-                    min="20222-2-1" max="2030-12-31" required>
-                &nbsp;
-				</div>
-                
-				<div class="col-12" style="margin-top:0px" >
-                <button type="button" class="btn btn-primary" onclick="getQuote()">Get Quote</button>
-                </div>
-				
-				<div class="col-12" style="margin-top:30px">
-                <label style="margin-bottom:0px" for="suggestedprice" class="form-label">Suggested Price per Gallon</label>
-                <input style="margin-bottom:10px" type="text" class="form-control" id="suggested" value="Click 'Get Quote'" readonly>
-				
-                <label style="margin-bottom:0px" for="totalprice" class="form-label">Total Price</label>
-                <input style="margin-bottom:10px" type="text" class="form-control" id="total" value="Click 'Get Quote'" readonly>
+					<div class="col-12">
+						<label style="margin-bottom:0px" for="inputgallon" class="form-label">Gallons Requested</label>
+						<input style="margin-bottom:10px" type="number" class="form-control" id="gallons" required>
+						
+						<label style="margin-bottom:0px" for="inputAddress" class="form-label">Address</label>
+						<input style="margin-bottom:10px" type="text" class="form-control" id="inputAddress" value="From your profile" aria-label="readonly input example" readonly>
+						
+						<label style="margin-bottom:0px" for="delivery-date">Delivery Date</label>
+						<input style="margin-bottom:0px" class="form-control" type="date" id="end_date" name="delivery-date"
+							value=""
+							min="20222-2-1" max="2030-12-31" required>
+						&nbsp;
+					</div>
+					
+					<div class="col-12" style="margin-top:0px" >
+						<button type="button" class="btn btn-primary" onclick="getQuote()">Get Quote</button>
+					</div>
+					
+					<div class="col-12" style="margin-top:30px">
+						<label style="margin-bottom:0px" for="suggestedprice" class="form-label">Suggested Price per Gallon</label>
+						<input style="margin-bottom:10px" type="text" class="form-control" id="suggested" value="Click 'Get Quote'" rawvalue=-1 readonly>
+						
+						<label style="margin-bottom:0px" for="totalprice" class="form-label">Total Price</label>
+						<input style="margin-bottom:10px" type="text" class="form-control" id="total" value="Click 'Get Quote'" rawvalue=-1 readonly>
 
-                <button style="margin-top:10px" type="submit" class="btn btn-primary" onclick="">Submit</button>
-                </div>
-            </fieldset>  
-            <p id="quote"> </p>        
+						<button style="margin-top:10px" type="button" class="btn btn-primary" onclick="submitQuote()">Submit</button>
+					</div>
+				</fieldset>
+				<p id="quote"> </p>        
             </form>
         </div>
     </span>
