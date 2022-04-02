@@ -60,13 +60,13 @@ it('register()', async () => {
     expect(data).toBe(true);
 } );
 
-it('register()', async () => {
+it('register(without username)', async () => {
     
     const data = await unittest.register("", "dhvkdvjkdf", true)
     expect(data).toBe(false);
 } );
 
-it('register()', async () => {
+it('register(without password)', async () => {
     
     const data = await unittest.register("jdbfkjvbkaf", "", true)
     expect(data).toBe(false);
