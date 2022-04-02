@@ -304,14 +304,17 @@ app.post('/signout', checkAuthenticated,(req, res) => {
   }
 })
 
-app.post('/checklogin', function(req, res) {//=> {
+app.post('/checklogin', function(req, res)  {//=> {
 	//console.log("/checklogin> username = " + req.session.username)
 	//console.log("/checklogin> loggedin = " + req.session.loggedin)
 	res.send(req.session.loggedin == true)
 })
 
 
+
+
 function checkAuthenticated(req, res, next) {
+  console.log("checkAuthenticated> req.session.loggedin = " + req.session.loggedin)
   if(req.session.loggedin) {
     return next();
   } else {
@@ -320,8 +323,9 @@ function checkAuthenticated(req, res, next) {
 }
 
 function checkNotAuthenticated(req, res, next) {
+  console.log("checkNotAuthenticated> req.session.loggedin = " + req.session.loggedin)
   if(req.session.loggedin) {
-    res.redirect('/');
+    res.redirect('/profile.html');
   } else {
     return next();
   }
