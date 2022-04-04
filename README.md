@@ -9,8 +9,10 @@ How to run?
 
 first of all install dependecies. (requires Node JS)
 "dependencies": {
+    "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
+    "express-session": "^1.17.2",
     "jest": "^27.5.1",
     "pg": "^8.7.1"
   }

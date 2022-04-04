@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1648867830000" clover="3.2.0">
-  <project timestamp="1648867830000" name="All files">
+<coverage generated="1648870408787" clover="3.2.0">
+  <project timestamp="1648870408788" name="All files">
     <metrics statements="99" coveredstatements="88" conditionals="72" coveredconditionals="59" methods="7" coveredmethods="7" elements="178" coveredelements="154" complexity="0" loc="99" ncloc="99" packages="1" files="1" classes="1"/>
     <file name="main.js" path="C:\Users\jinang\Documents\GitHub\SoftwareDesign_Group5_Assignment2\public\main.js">
       <metrics statements="99" coveredstatements="88" conditionals="72" coveredconditionals="59" methods="7" coveredmethods="7"/>
