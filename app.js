@@ -306,6 +306,19 @@ app.post('/submitQuote', checkAuthenticated, async(req, res)=>{
 	}
 })
 
+app.post('/address', checkAuthenticated, async(req, res)=>{
+  try{
+    const address = await pool.query(`SELECT concat(address1,' ' ,address2, ', ', city, ', ', state, ', ', zipcode) FROM public.userprofile WHERE username='${req.session.username}';`);
+    const address1 = address.rows[0].concat
+    console.log("addres: " + address1)
+    res.send([address1]);
+    res.end();
+  }
+  catch(err){
+    console.log(err.message)
+  }
+})
+
 app.post('/signout', checkAuthenticated,(req, res) => {
   if (req.session.loggedin) {
     req.session.destroy(err => {
@@ -320,6 +333,26 @@ app.post('/signout', checkAuthenticated,(req, res) => {
   } else {
     res.send(false)
     res.end()
+  }
+})
+
+//endpoint to check if user updated profile right after registration or not if they haven't then we force them to update their profile
+app.post('/checkNsignOut', checkAuthenticated,async(req, res) => {
+  try{
+    let check = await pool.query(`SELECT * FROM public.userprofile WHERE username='${req.session.username}';`)
+    if (check.rowCount == 0)
+    {
+      res.send(false)
+      res.end()
+    }
+    else
+    {
+      res.send(true)
+      res.end()
+    }
+  }
+  catch(err){
+    console.log(err.message)
   }
 })
 

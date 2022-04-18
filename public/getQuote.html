@@ -50,6 +50,7 @@
 	<script>
 		checklogin()
 		getQuoteInfo()
+        getAddress()
 	</script>
 
 
@@ -62,7 +63,7 @@
 						<input style="margin-bottom:10px" type="number" class="form-control" id="gallons" required>
 						
 						<label style="margin-bottom:0px" for="inputAddress" class="form-label">Address</label>
-						<input style="margin-bottom:10px" type="text" class="form-control" id="inputAddress" value="From your profile" aria-label="readonly input example" readonly>
+						<input style="margin-bottom:10px" type="text" class="form-control" id="inputAddress" value="From your profile" rawvalue=-1 readonly>
 						
 						<label style="margin-bottom:0px" for="delivery-date">Delivery Date</label>
 						<input style="margin-bottom:0px" class="form-control" type="date" id="end_date" name="delivery-date"

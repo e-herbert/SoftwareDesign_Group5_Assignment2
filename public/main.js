@@ -376,6 +376,24 @@ async function signout()
 }
 
 /* istanbul ignore next */
+async function checkNsignOut()
+{
+    const response = await fetch("http://localhost:5000/checkNsignOut", 
+    {        
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        //body: JSON.stringify(body)
+    });
+    const checkprofile = await response.json();
+    console.log(checkprofile)
+    if(checkprofile)
+        await signout()
+    else
+        alert("You need to add a profile before signing out")
+    return checkprofile
+}
+
+/* istanbul ignore next */
 async function ifsignedin()
 {    
     const response = await fetch("http://localhost:5000/signout", 
@@ -490,6 +508,25 @@ async function getQuoteInfo(){
 	catch(err){
 		alert(err);
 	}
+}
+
+/* istanbul ignore next */
+async function getAddress(){
+    try{
+        const response = await fetch("http://localhost:5000/address",
+        {
+            method: "POST",
+            headers: { "Content-Type": "application/json" }
+        });
+        console.log(true)
+        const addrss = await response.json();
+        // console.log(addrss[0])
+        // document.querySelector("#suggested").rawvalue = vals.row;
+        document.querySelector("#inputAddress").value  = addrss[0];
+    }
+    catch(err){
+        console.log(err);
+    }
 }
 
 async function getQuote(gallons, date, test)
