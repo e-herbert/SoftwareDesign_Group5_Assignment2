@@ -25,6 +25,7 @@ CREATE TABLE history (
     gallons numeric(10,2) NOT NULL,
     suggested_price numeric(10,2) NOT NULL,
     total_price numeric(10,2) NOT NULL,
+    address VARCHAR(200) NOT NULL
     CONSTRAINT "history_username_fkey" FOREIGN KEY (username) REFERENCES userdata(username)
 );
 

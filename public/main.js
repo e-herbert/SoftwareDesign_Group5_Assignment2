@@ -534,7 +534,7 @@ async function getQuote(gallons, date, test)
     {
         var suggestedPrice = await getSuggestedPrice(state, hist, gallons)
         var totalAmount = await getTotalAmount(suggestedPrice, gallons)
-        
+        console.log(state + " " + hist)
         document.querySelector("#suggested").rawvalue  = suggestedPrice
         document.querySelector("#suggested").value  = '$' + suggestedPrice
         document.querySelector("#total").rawvalue = totalAmount
@@ -586,7 +586,7 @@ async function submitQuote(){
 		}
 	}
 	catch(err){
-		alert(err);
+		console.log(err);
 	}
 }
 module.exports.submitQuote = submitQuote;
