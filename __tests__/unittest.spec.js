@@ -20,19 +20,19 @@ global.fetch = jest.fn(() => Promise.resolve({
 
 it('getQuote()', async () => {
     
-    const data = await unittest.getQuote(3, 10/4/2022, true);
+    const data = await unittest.getQuote('3', '2022-10-05', true);
     expect(data).toBe(true);
   });
 
 it('getQuote(without)', async () => {
     
-    const data = await unittest.getQuote('', false, true);
+    const data = await unittest.getQuote('', '2022-10-05', true);
     expect(data).toBe(false);
   });
 
 it('getQuote(without date)', async () => {
     
-    const data = await unittest.getQuote(3, '', true);
+    const data = await unittest.getQuote('3', '', true);
     expect(data).toBe(false);
   });
 
@@ -108,6 +108,12 @@ it('profile(without zipcode)', async () => {
     expect(data).toBe(false);
 } );
 
+it('profile(wrong zipcode)', async () => {
+    
+    const data = await unittest.profile("mr. bean", "5400 university of houston","main st.", "Houston", "TX", "741", true)
+    expect(data).toBe(false);
+} );
+
 it('regProfile()', async () => {
     
     const data = await unittest.regProfile("mr. bean", "5400 university of houston","main st.", "Houston", "TX", "77001", true)
@@ -144,6 +150,12 @@ it('regProfile(without zipcode)', async () => {
     expect(data).toBe(false);
 } );
 
+it('regProfile(wrong zipcode)', async () => {
+    
+    const data = await unittest.regProfile("mr. bean", "5400 university of houston","main st.", "Houston", "TX", "0000000000", true)
+    expect(data).toBe(false);
+} );
+
 it('getTotalAmount()', async () => {
     
     const data = await unittest.getTotalAmount(2.59, 250)
@@ -160,4 +172,17 @@ it('getSuggestedPrice()', async () => {
     
     const data = await unittest.getSuggestedPrice('NY', false, 1500)
     expect(data).toBe(1.74);
+} );
+
+
+it('checkIfgreaterOrEqual(correct date)',  () => {
+    
+    const data = unittest.checkIfgreaterOrEqual('2022-10-05')
+    expect(data).toBe(true);
+} );
+
+it('checkIfgreaterOrEqual(wrong date)',  () => {
+    
+    const data = unittest.checkIfgreaterOrEqual('2021-10-05')
+    expect(data).toBe(false);
 } );

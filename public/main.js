@@ -49,14 +49,14 @@ async function login(userName, passwd, test)
         /* istanbul ignore next */
         const creds = await response.json();
 
+        /* istanbul ignore next */
         if (creds == true)
         {
-            /* istanbul ignore next */
             location.href = "getQuote.html"
         }
+        /* istanbul ignore next */
         else
         {
-            /* istanbul ignore next */
             alert("Invalid username or password. Please try again.")
             return creds;
         }
@@ -518,7 +518,7 @@ async function getAddress(){
             method: "POST",
             headers: { "Content-Type": "application/json" }
         });
-        console.log(true)
+        // console.log(true)
         const addrss = await response.json();
         // console.log(addrss[0])
         // document.querySelector("#suggested").rawvalue = vals.row;
@@ -564,6 +564,13 @@ async function getQuote(gallons, date, test)
         alert("Please enter Date")
         return false;
     }
+    //already tested in the seperate unit test
+    /* istanbul ignore next */
+    if(!checkIfgreaterOrEqual(date))
+    {
+        alert("Date cannot be in the past");
+        return false;
+    }
     
     // Using pricing module to calculate suggested and total prices
     /* istanbul ignore next */
@@ -571,7 +578,7 @@ async function getQuote(gallons, date, test)
     {
         var suggestedPrice = await getSuggestedPrice(state, hist, gallons)
         var totalAmount = await getTotalAmount(suggestedPrice, gallons)
-        console.log(state + " " + hist)
+        // console.log(state + " " + hist)
         document.querySelector("#suggested").rawvalue  = suggestedPrice
         document.querySelector("#suggested").value  = '$' + suggestedPrice
         document.querySelector("#total").rawvalue = totalAmount
@@ -584,6 +591,28 @@ async function getQuote(gallons, date, test)
 }
 module.exports.getQuote = getQuote;
 
+function checkIfgreaterOrEqual(date)
+{
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth()+1; //January is 0!
+    var yyyy = today.getFullYear();
+    if(dd<10) {
+        dd='0'+dd
+    } 
+    if(mm<10) {
+        mm='0'+mm
+    } 
+    today = yyyy+'-'+mm+'-'+dd;
+    if(date < today)
+    {
+        return false;
+    }
+    return true;
+}
+module.exports.checkIfgreaterOrEqual = checkIfgreaterOrEqual;
+
+/* istanbul ignore next */
 async function getUsername(){
 	try{
 		const response = await fetch("http://localhost:5000/username",

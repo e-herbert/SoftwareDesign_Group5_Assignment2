@@ -290,7 +290,7 @@ app.post('/submitQuote', checkAuthenticated, async(req, res)=>{
 		{
 		  const {date, gallons, suggestedPrice, totalAmount} = req.body;
 		  console.log('Quote placed for date: ' + date + ' for ' + gallons + ' gallons. Suggested price: $' + suggestedPrice + '. Total amount: $' + totalAmount);
-      const address = await pool.query(`SELECT concat(address1,' ' ,address2, ', ', city, ', ', state, ', ', zipcode) FROM public.userprofile WHERE username='${req.session.username}';`);
+      const address = await pool.query(`SELECT concat(address1,' ',address2, ', ', city, ', ', state, ', ', zipcode) FROM public.userprofile WHERE username='${req.session.username}';`);
       const address1 = address.rows[0].concat
       console.log(address1)
       await pool.query(`BEGIN TRANSACTION;`);
