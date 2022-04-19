@@ -319,6 +319,16 @@ app.post('/address', checkAuthenticated, async(req, res)=>{
   }
 })
 
+app.post('/username', checkAuthenticated, async(req, res)=>{
+	try{
+		res.send([req.session.username]);
+		res.end();
+	}
+	catch(err){
+		console.log(err.message)
+	}
+})
+
 app.post('/signout', checkAuthenticated,(req, res) => {
   if (req.session.loggedin) {
     req.session.destroy(err => {

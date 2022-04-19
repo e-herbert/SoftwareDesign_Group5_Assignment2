@@ -584,6 +584,22 @@ async function getQuote(gallons, date, test)
 }
 module.exports.getQuote = getQuote;
 
+async function getUsername(){
+	try{
+		const response = await fetch("http://localhost:5000/username",
+		{
+			method: "POST",
+			headers: { "Content-Type": "application/json" }
+		});
+		
+		const username = await response.json();
+		document.querySelector("#usernamelabel").innerText = "Hello " + username;
+	}
+	catch(err){
+		alert(err);
+	}
+}
+
 /* istanbul ignore next */
 async function submitQuote(){
 	try{

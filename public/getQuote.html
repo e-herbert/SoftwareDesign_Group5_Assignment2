@@ -28,12 +28,10 @@
             <div class="container"><a href="#" class="navbar-brand text-uppercase font-weight-bold">Fuel Quote App</a>
                 <button type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler navbar-toggler-right"><i class="fa fa-bars"></i></button>
                 
-                <div id="navbarSupportedContent" class="collapse navbar-collapse">
+				<div id="navbarSupportedContent" class="collapse navbar-collapse">
                     <ul class="navbar-nav ml-auto">
-                        <!-- <li class="nav-item active"><a href="index.html" class="nav-link text-uppercase font-weight-bold">Home <span class="sr-only">(current)</span></a></li> -->
-                        <!-- <li class="nav-item"><a href="getQuote.html" class="nav-link text-uppercase font-weight-bold">Get Quote</a></li> -->
-                        <li class="nav-item"><a href="quotehistory.html" class="nav-link text-uppercase font-weight-bold" >Quote History</a></li>
-                        <!-- <li class="nav-item"><a href="register.html" class="nav-link text-uppercase font-weight-bold">Register</a></li> -->
+						<label class="nav-link" for="navbarSupportedContent" id="usernamelabel">Hello [username]</label>
+                        <li class="nav-item"><a href="quotehistory.html" class="nav-link text-uppercase font-weight-bold">Quote History</a></li>
                         <li class="nav-item"><a href="profile.html" class="nav-link text-uppercase font-weight-bold">Profile</a></li>
                         <li class="nav-item"><button type="button" class="btn btn-primary" onclick="signout()">Sign Out</button></li>
                     </ul>
@@ -45,88 +43,89 @@
        
     
     
-</body>
+	<body>
 
-	<script>
-		checklogin()
-		getQuoteInfo()
-        getAddress()
-	</script>
+		<script>
+			checklogin();
+			getUsername();
+			getQuoteInfo();
+			getAddress();
+		</script>
 
 
-    <span class="border">
-        <div class="form">
-            <form> 
-                <fieldset>          
-					<div class="col-12">
-						<label style="margin-bottom:0px" for="inputgallon" class="form-label">Gallons Requested</label>
-						<input style="margin-bottom:10px" type="number" class="form-control" id="gallons" required>
+		<span class="border">
+			<div class="form">
+				<form> 
+					<fieldset>          
+						<div class="col-12">
+							<label style="margin-bottom:0px" for="gallons" class="form-label">Gallons Requested</label>
+							<input style="margin-bottom:10px" type="number" class="form-control" id="gallons" required>
+							
+							<label style="margin-bottom:0px" for="inputAddress" class="form-label">Address</label>
+							<input style="margin-bottom:10px" type="text" class="form-control" id="inputAddress" value="From your profile" rawvalue=-1 readonly>
+							
+							<label style="margin-bottom:0px" for="delivery-date">Delivery Date</label>
+							<input style="margin-bottom:0px" class="form-control" type="date" id="end_date" name="delivery-date"
+								value=""
+								min="20222-2-1" max="2030-12-31" required>
+							&nbsp;
+						</div>
 						
-						<label style="margin-bottom:0px" for="inputAddress" class="form-label">Address</label>
-						<input style="margin-bottom:10px" type="text" class="form-control" id="inputAddress" value="From your profile" rawvalue=-1 readonly>
+						<div class="col-12" style="margin-top:0px" >
+							<button type="button" class="btn btn-primary" onclick="getQuote()">Get Quote</button>
+						</div>
 						
-						<label style="margin-bottom:0px" for="delivery-date">Delivery Date</label>
-						<input style="margin-bottom:0px" class="form-control" type="date" id="end_date" name="delivery-date"
-							value=""
-							min="20222-2-1" max="2030-12-31" required>
-						&nbsp;
+						<div class="col-12" style="margin-top:30px">
+							<label style="margin-bottom:0px" for="suggested" class="form-label">Suggested Price per Gallon</label>
+							<input style="margin-bottom:10px" type="text" class="form-control" id="suggested" value="Click 'Get Quote'" rawvalue=-1 readonly>
+							
+							<label style="margin-bottom:0px" for="total" class="form-label">Total Price</label>
+							<input style="margin-bottom:10px" type="text" class="form-control" id="total" value="Click 'Get Quote'" rawvalue=-1 readonly>
+
+							<button style="margin-top:10px" type="button" class="btn btn-primary" onclick="submitQuote()">Submit</button>
+						</div>
+					</fieldset>
+					<p id="quote"> </p>        
+				</form>
+			</div>
+		</span>
+
+		
+
+		<div id="footer">
+			<div class="footer-dark">
+				<footer class="footer">
+					<div class="container">
+						<div class="row">
+							<div class="col-sm-6 col-md-3 item">
+								<h3>Services</h3>
+								<ul>
+									<li><a href="#">Web design</a></li>
+									<li><a href="#">Development</a></li>
+									<li><a href="#">Hosting</a></li>
+								</ul>
+							</div>
+							<div class="col-sm-6 col-md-3 item">
+								<h3>About</h3>
+								<ul>
+									<li><a href="#">Company</a></li>
+									<li><a href="#">Team</a></li>
+									<li><a href="#">Careers</a></li>
+								</ul>
+							</div>
+							<div class="col-md-6 item text">
+								<h3>Fuel Quote APP</h3>
+								<p>A software application that will predict the rate of the fuel based on Client Location (in-state or out-of-state), Client history (existing customer with previous purchase or new), Gallons requested, Company profit margin (%)</p>
+							</div>
+							<div class="col item social"><a href="#"><i class="icon ion-social-facebook"></i></a><a href="#"><i class="icon ion-social-twitter"></i></a><a href="#"><i class="icon ion-social-snapchat"></i></a><a href="#"><i class="icon ion-social-instagram"></i></a></div>
+						</div>
+						<p class="copyright">Fuel Quote APP © 2022</p>
 					</div>
-					
-					<div class="col-12" style="margin-top:0px" >
-						<button type="button" class="btn btn-primary" onclick="getQuote()">Get Quote</button>
-					</div>
-					
-					<div class="col-12" style="margin-top:30px">
-						<label style="margin-bottom:0px" for="suggestedprice" class="form-label">Suggested Price per Gallon</label>
-						<input style="margin-bottom:10px" type="text" class="form-control" id="suggested" value="Click 'Get Quote'" rawvalue=-1 readonly>
-						
-						<label style="margin-bottom:0px" for="totalprice" class="form-label">Total Price</label>
-						<input style="margin-bottom:10px" type="text" class="form-control" id="total" value="Click 'Get Quote'" rawvalue=-1 readonly>
+				</footer>
+			</div>
+		</div>
 
-						<button style="margin-top:10px" type="button" class="btn btn-primary" onclick="submitQuote()">Submit</button>
-					</div>
-				</fieldset>
-				<p id="quote"> </p>        
-            </form>
-        </div>
-    </span>
-
-    
-
-    <div id="footer">
-    <div class="footer-dark">
-        <footer class="footer">
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm-6 col-md-3 item">
-                        <h3>Services</h3>
-                        <ul>
-                            <li><a href="#">Web design</a></li>
-                            <li><a href="#">Development</a></li>
-                            <li><a href="#">Hosting</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-sm-6 col-md-3 item">
-                        <h3>About</h3>
-                        <ul>
-                            <li><a href="#">Company</a></li>
-                            <li><a href="#">Team</a></li>
-                            <li><a href="#">Careers</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-md-6 item text">
-                        <h3>Fuel Quote APP</h3>
-                        <p>A software application that will predict the rate of the fuel based on Client Location (in-state or out-of-state), Client history (existing customer with previous purchase or new), Gallons requested, Company profit margin (%)</p>
-                    </div>
-                    <div class="col item social"><a href="#"><i class="icon ion-social-facebook"></i></a><a href="#"><i class="icon ion-social-twitter"></i></a><a href="#"><i class="icon ion-social-snapchat"></i></a><a href="#"><i class="icon ion-social-instagram"></i></a></div>
-                </div>
-                <p class="copyright">Fuel Quote APP © 2022</p>
-            </div>
-        </footer>
-    </div>
-</div>
-
-</body>
+	</body>
 
 
 </html>
