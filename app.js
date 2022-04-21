@@ -329,6 +329,21 @@ app.post('/username', checkAuthenticated, async(req, res)=>{
 	}
 })
 
+app.post('/getProfile', checkAuthenticated, async(req, res)=>{
+	try{
+		console.log('/getProfile> Querying profile info for user ' + req.session.username)
+		profile = await pool.query(`SELECT * FROM public.userprofile WHERE username='${req.session.username}';`);
+		profile = profile.rows[0]
+		console.log('/getProfile> fullname: ' + profile['fullname'] + ', address1: ' + profile['address1'] + ', address2: ' + profile['address2'] + ', city: ' + profile['city'] + ', state: ' + profile['state'] + ', zipcode: ' + profile['zipcode'])
+		
+		res.send([profile['fullname'], profile['address1'], profile['address2'], profile['city'], profile['state'], profile['zipcode']]);
+		res.end();
+	}
+	catch(err){
+		console.log(err.message)
+	}
+})
+
 app.post('/signout', checkAuthenticated,(req, res) => {
   if (req.session.loggedin) {
     req.session.destroy(err => {

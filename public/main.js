@@ -155,6 +155,27 @@ async function register(username, password, test)
 }
 module.exports.register = register
 
+async function getProfileInfo(){
+	try{
+        const response = await fetch("http://localhost:5000/getProfile",
+        {
+            method: "POST",
+            headers: { "Content-Type": "application/json" }
+        });
+		
+        const profile = await response.json();
+        document.querySelector("#name").value  = profile[0];
+		document.querySelector("#address1").value  = profile[1];
+		document.querySelector("#address2").value  = profile[2];
+		document.querySelector("#lcity").value  = profile[3];
+		document.querySelector("#states").value  = profile[4];
+		document.querySelector("#zip").value  = profile[5];
+    }
+    catch(err){
+        alert(err);
+    }
+}
+
 //function to update profile 
 async function profile(fullname, address1, address2, city, state, zip, test)
 {
@@ -518,10 +539,8 @@ async function getAddress(){
             method: "POST",
             headers: { "Content-Type": "application/json" }
         });
-        // console.log(true)
+		
         const addrss = await response.json();
-        // console.log(addrss[0])
-        // document.querySelector("#suggested").rawvalue = vals.row;
         document.querySelector("#inputAddress").value  = addrss[0];
     }
     catch(err){
