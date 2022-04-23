@@ -71,6 +71,14 @@ async function login(userName, passwd, test)
 module.exports.login = login;
 
 /* istanbul ignore next */
+function nospaces(t)
+{
+    if(t.value.match(/\s/g)){
+      t.value=t.value.replace(/\s/g,'');
+    }
+}
+
+/* istanbul ignore next */
 async function checklogin()
 {
     const response = await fetch("http://localhost:5000/checklogin", 
@@ -155,6 +163,7 @@ async function register(username, password, test)
 }
 module.exports.register = register
 
+/* istanbul ignore next */
 async function getProfileInfo(){
 	try{
         const response = await fetch("http://localhost:5000/getProfile",

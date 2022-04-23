@@ -49,11 +49,11 @@
 				<p>Create Account, if already register go to login</p>
 				<div class="col-12">
 					<label for="user">Username:</label><br>
-					<input class="form-control" type="text" id="user" name="username" placeholder="Enter Username" required><br>
+					<input class="form-control" type="text" id="user" name="username" placeholder="Enter Username" maxlength="32" onkeyup="nospaces(this)" required><br>
 				</div>
 				<div class="col-12">
 					<label for="pass">Password:</label><br>
-					<input class="form-control" type="password" id="pass" name="password" placeholder="Enter password" required><br><br>
+					<input class="form-control" type="password" id="pass" name="password" placeholder="Enter password" maxlength="150" onkeyup="nospaces(this)" required><br><br>
 				</div>
 				<div class="col-12">
 					<button type="button" class="btn btn-primary" onclick="register()">Register</button>
