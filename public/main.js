@@ -1,14 +1,5 @@
-// $(function () {
-//     $(window).on('scroll', function () {
-//         if ( $(window).scrollTop() > 10 ) {
-//             $('.navbar').addClass('active');
-//         } else {
-//             $('.navbar').removeClass('active');
-//         }
-//     });
-// });
-
-// (function($){"use strict";})(jQuery);
+//client side javascript for all .html files
+//validate user inputs and fetch infor to app.js
 
 async function login(userName, passwd, test)
 {
@@ -65,7 +56,7 @@ async function login(userName, passwd, test)
 
 	}
 	catch(err){
-		//console.log(err);
+		console.log(err);
 	}
 }
 module.exports.login = login;
@@ -472,24 +463,6 @@ async function historyQ()
 
         // create a table element
         var table = document.createElement("table");
-            
-        // create table row
-        //var tr = table.insertRow(-1);
-        //tr.setAttribute("class", "table100-head");
-        //var thead = document.createElement("thead") 
-        //var header = table.createTHead();
-        // for (var i = 0; i < cols.length; i++)
-        // {
-            
-        //     // Create the table header
-        //     var theader = document.createElement("th");
-        //     theader.innerHTML = cols[i];
-            
-        //     // Append column name to the table row
-        //     tr.appendChild(theader);
-        //     //header.appendChild(tr);
-        // }
-        //header.appendChild(tr);
 
         // Add the data to the table
         for (var i = 0; i < abc.length; i++) 
@@ -505,7 +478,7 @@ async function historyQ()
                 cell.setAttribute("class", "column"+x);
                     
                 // Inserting the cell data              
-                    cell.innerHTML = abc[i][cols[j]];
+                cell.innerHTML = abc[i][cols[j]];
                 
             }
         }
@@ -612,13 +585,12 @@ async function getQuote(gallons, date, test)
         document.querySelector("#total").rawvalue = totalAmount
         document.querySelector("#total").value = '$' + totalAmount.toFixed(2)
     }
-	
-    
-	//quote_data.innerHTML += "<b>Ticket Number: " + booking[i].ticket_no + "  |  </b>Booking Reference: " + booking[i].book_ref + "  |  Passenger ID: " + booking[i].passenger_id + "<br/>";
+
     return true;
 }
 module.exports.getQuote = getQuote;
 
+//validate the date entered by the user is not in the past
 function checkIfgreaterOrEqual(date)
 {
     var today = new Date();
