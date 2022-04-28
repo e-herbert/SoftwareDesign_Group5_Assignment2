@@ -92,7 +92,7 @@ async function checklogin()
     }
     else{
 		if(page == 'index.html' || page == 'register.html')
-			location.href = 'profile.html';
+			location.href = history.back();
         return true;
     }
 
