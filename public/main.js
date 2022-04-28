@@ -78,14 +78,21 @@ async function checklogin()
         headers: { "Content-Type": "application/json" },
         //body: JSON.stringify(body)
     });
+	
     const abc = await response.json();
+	const page = document.URL.split('/').pop();
+	
     if(!abc)
     {
-		alert("OOPS! You are not logged in. Please login to continue.");
-        location.href = "index.html"
+		if(!(page == 'index.html' || page == 'register.html')){
+			alert("OOPS! You are not logged in. Please login to continue.");
+			location.href = "index.html";
+		}
         return false;
     }
     else{
+		if(page == 'index.html' || page == 'register.html')
+			location.href = 'profile.html';
         return true;
     }
 
