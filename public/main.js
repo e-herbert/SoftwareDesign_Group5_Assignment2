@@ -78,24 +78,16 @@ async function checklogin()
         headers: { "Content-Type": "application/json" },
         //body: JSON.stringify(body)
     });
-	
     const abc = await response.json();
-	const page = document.URL.split('/').pop();
-	
     if(!abc)
     {
-		if(!(page == 'index.html' || page == 'register.html')){
-			alert("OOPS! You are not logged in. Please login to continue.");
-			location.href = "index.html";
-		}
+		alert("OOPS! You are not logged in. Please login to continue.");
+        location.href = "index.html"
         return false;
     }
     else{
-		if(page == 'index.html' || page == 'register.html')
-			location.href = history.back();
         return true;
     }
-
     return abc;
 }
 
@@ -156,7 +148,7 @@ async function register(username, password, test)
 
     }
     catch(err){
-        //console.log(err);
+        console.log(err);
     }
 }
 module.exports.register = register
@@ -179,7 +171,7 @@ async function getProfileInfo(){
 		document.querySelector("#zip").value  = profile[5];
     }
     catch(err){
-        alert(err);
+        console.log(err);
     }
 }
 
@@ -424,7 +416,7 @@ async function checkNsignOut()
 /* istanbul ignore next */
 async function ifsignedin()
 {    
-    const response = await fetch("http://localhost:5000/signout", 
+    const response = await fetch("http://localhost:5000/checklogin", 
     {        
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -433,6 +425,22 @@ async function ifsignedin()
     const abc = await response.json();
     console.log(abc)
     if(abc)
+        location.href = history.back();
+}
+
+//no entry to regProfile.html if user already has a profile
+/* istanbul ignore next */
+async function validEntry()
+{    
+    const response = await fetch("http://localhost:5000/checkNsignOut", 
+    {        
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        //body: JSON.stringify(body)
+    });
+    const abcd = await response.json();
+    console.log(abcd)
+    if(abcd)
         location.href = history.back();
 }
 
@@ -495,7 +503,7 @@ async function historyQ()
         newTable.innerHTML = "";
         newTable.appendChild(table);
     
-    console.log("true")
+    // console.log("true")
     
 
     return true
@@ -516,7 +524,7 @@ async function getQuoteInfo(){
 		document.querySelector("#suggested").state = vals[1];
 	}
 	catch(err){
-		alert(err);
+		console.log(err);
 	}
 }
 
@@ -632,7 +640,7 @@ async function getUsername(){
 		document.querySelector("#usernamelabel").innerText = "Hello " + username;
 	}
 	catch(err){
-		alert(err);
+		console.log(err);
 	}
 }
 
