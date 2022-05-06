@@ -37,10 +37,13 @@ async function login(userName, passwd, test)
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(body)
         } ); 
-        
+
         /* istanbul ignore next */
         const creds = await response.json();
 
+        //creds[0] contains bool value for foundUserID && password match
+        //creds[1] contains bool value for whether the user has set their profile
+        
         /*istanbul ignore next*/
         if (creds[0] == false)
         {
@@ -57,7 +60,7 @@ async function login(userName, passwd, test)
         else if (creds[0] == true && creds[1] == false)
         {
             alert("Please set profile before continuing")
-            location.href = "profile.html"
+            location.href = "regProfile.html"
         }
         
         return creds;
