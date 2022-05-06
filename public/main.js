@@ -37,19 +37,27 @@ async function login(userName, passwd, test)
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(body)
         } ); 
+        
         /* istanbul ignore next */
         const creds = await response.json();
 
+        /*istanbul ignore next*/
+        if (creds[0] == false)
+        {
+            alert("Invalid username or password. Please try again.")
+            return creds;
+        }
+
         /* istanbul ignore next */
-        if (creds == true)
+        else if (creds[0] == true && creds[1] == true)
         {
             location.href = "getQuote.html"
         }
         /* istanbul ignore next */
-        else
+        else if (creds[0] == true && creds[1] == false)
         {
-            alert("Invalid username or password. Please try again.")
-            return creds;
+            alert("Please set profile before continuing")
+            location.href = "profile.html"
         }
         
         return creds;

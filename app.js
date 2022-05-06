@@ -38,6 +38,7 @@ app.post('/login', checkNotAuthenticated, async(req, res)=> {
     const {userName, password} = req.body;
     var userFound = false
     var passmatch = false
+    const creds = [false, false]
     const hashedpass = await bcrypt.hash(password, 10)
     //query to search user
     const user = await pool.query(`SELECT * FROM public.userdata WHERE username='${userName}';`)
@@ -68,13 +69,17 @@ app.post('/login', checkNotAuthenticated, async(req, res)=> {
         req.session.loggedin = true;
 				req.session.username = userName;
         console.log("/login> user logged in: " + req.session.username);
+        creds[0] = true;
+        const q1 = await pool.query(`select * from public.userprofile where username='${req.session.username}';`);
+        if (q1.rowCount == 1)
+          creds[1] = true;
     }
     else
     {
       console.log("Input username or password is invalid")
     }
 
-    res.send(userFound && passmatch)
+    res.send(creds)
     res.end()
 
   } catch(err){
