@@ -470,7 +470,15 @@ async function historyQ()
         //body: JSON.stringify(body)
     });
     const abc = await response.json();
-    console.log(abc)
+    if(abc === false)
+    {
+        alert("Please complete your user profile before viewing your quote history.");
+        location.href = "regProfile.html";
+        return false;
+    }
+    else
+    {
+        console.log(abc)
 
         var cols = [];  
         for (var i = 0; i < abc.length; i++)
@@ -514,10 +522,12 @@ async function historyQ()
         newTable.innerHTML = "";
         newTable.appendChild(table);
     
-    // console.log("true")
+        // console.log("true")
     
 
-    return true
+        return true
+    }
+    
 }
 module.exports.historyQ = historyQ
 
@@ -531,8 +541,19 @@ async function getQuoteInfo(){
 		});
 		
 		const vals = await response.json();
-		document.querySelector("#suggested").hasHistory = vals[0];
-		document.querySelector("#suggested").state = vals[1];
+
+        if(vals[0] == false)
+        {
+            alert("Please complete your user profile before sumbiting a quote.");
+            location.href = "regProfile.html";
+            return false;
+        }
+
+        else
+        {
+            document.querySelector("#suggested").hasHistory = vals[1];
+            document.querySelector("#suggested").state = vals[2];
+        }
 	}
 	catch(err){
 		console.log(err);
@@ -677,18 +698,25 @@ async function submitQuote(){
 			body: JSON.stringify(body)
 		} ); 
 		
-		const submitted = await response.json();
+		const creds = await response.json();
 		
-		console.log(submitted);
+		console.log(creds);
 
-		if (!submitted)
+		if (creds[0] == false)
 		{
 			alert("Please login before requesting a quote.");
 			location.href = "index.html"
 			return false;
 		}
 
-		else
+        else if (creds[0] == true && creds[1] == false)
+        {
+            alert("Please complete your user profile before sumbiting a quote.");
+            location.href = "regProfile.html";
+            return false;
+        }
+
+		else 
 		{
 			alert("Thank you for using our app. Your quote has been submitted.");
 		}

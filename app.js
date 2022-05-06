@@ -201,12 +201,26 @@ app.post('/history', checkAuthenticated, async(req, res)=>{
   try{
         //unit test
         console.log("connected to DB for unit test from /history endpoint")
-        // console.log(`SELECT date, gallons, suggested_price, total_price, address as Address FROM public.history as h WHERE h.username = '${req.session.username}';`)
-        const demo = await pool.query(`SELECT date, gallons, suggested_price, total_price, address as Address FROM public.history as h WHERE h.username = '${req.session.username}';`)
+
+        //check to see if profile has been set
+        const q1 = await pool.query(`select * from public.userprofile where username='${req.session.username}';`);
+        if(q1.rowCount == 0)
+        {
+          console.log('Profile not set. Redirecting to regProfilehtml')
+          res.send(false);
+          res.end();
+        }
+
+        else
+        {
+          // console.log(`SELECT date, gallons, suggested_price, total_price, address as Address FROM public.history as h WHERE h.username = '${req.session.username}';`)
+          const demo = await pool.query(`SELECT date, gallons, suggested_price, total_price, address as Address FROM public.history as h WHERE h.username = '${req.session.username}';`)
+                  
+          console.log(demo.rows)
+          res.send(demo.rows)
+          res.end()
+        }
         
-        console.log(demo.rows)
-        res.send(demo.rows)
-        res.end()
   }
   catch(err){
     console.log(err.message);
@@ -221,22 +235,36 @@ app.post('/quoteInfo', checkAuthenticated, async(req, res) => {
 		histQ = await pool.query(`SELECT * FROM public.history WHERE username='${user}';`);
     let histCount = histQ.rowCount;
     // console.log(histCount);
-    if (histCount == 0)
+
+    //check to see if profile has been set
+    const q1 = await pool.query(`select * from public.userprofile where username='${user}';`);
+    if(q1.rowCount == 0)
     {
-      hasHist=false;
+      console.log('Profile not set. Redirecting to regProfilehtml')
+      res.send([false, false, false]);
+      res.end();
     }
-    else{
-      hasHist=true;
+
+    else
+    {
+      if (histCount == 0)
+      {
+        hasHist=false;
+      }
+      else
+      {
+        hasHist=true;
+      }
+      // console.log(`SELECT * FROM public.history WHERE username='${user}';`)
+      state = await pool.query(`SELECT state FROM public.userprofile WHERE username='${user}';`);
+      state = state.rows[0]['state'];
+      
+      console.log("/quoteInfo> Has history: " + hasHist);
+      console.log("/quoteInfo> State: " + state);
+      
+      res.send([true, hasHist, state]);
+      res.end();
     }
-    // console.log(`SELECT * FROM public.history WHERE username='${user}';`)
-		state = await pool.query(`SELECT state FROM public.userprofile WHERE username='${user}';`);
-		state = state.rows[0]['state'];
-		
-		console.log("/quoteInfo> Has history: " + hasHist);
-		console.log("/quoteInfo> State: " + state);
-		
-		res.send([hasHist, state]);
-		res.end();
 	}
 	catch(err){
 		console.log("/quoteInfo> " + err)
@@ -247,27 +275,43 @@ app.post('/quoteInfo', checkAuthenticated, async(req, res) => {
 app.post('/submitQuote', checkAuthenticated, async(req, res)=>{
 	console.log("/submitQuote> successfully called")
 	try{
+    creds=[false,false,false]
 		if (!req.session.loggedin)
 		{
 		  console.log('user not logged in');
 		  //res.send(false);
-		  res.send(false);
+		  res.send(creds);
       res.end();
 		}
 
 		else
 		{
-		  const {date, gallons, suggestedPrice, totalAmount} = req.body;
-		  console.log('Quote placed for date: ' + date + ' for ' + gallons + ' gallons. Suggested price: $' + suggestedPrice + '. Total amount: $' + totalAmount);
-      const address = await pool.query(`SELECT concat(address1,' ',address2, ', ', city, ', ', state, ', ', zipcode) FROM public.userprofile WHERE username='${req.session.username}';`);
-      const address1 = address.rows[0].concat
-      console.log(address1)
-      await pool.query(`BEGIN TRANSACTION;`);
-      console.log(`INSERT INTO public.history VALUES( '${req.session.username}','${date}', '${gallons}', '${suggestedPrice}', '${totalAmount}', '${address1}');`);
-      const submitquery = await pool.query(`INSERT INTO public.history VALUES( '${req.session.username}','${date}', '${gallons}', '${suggestedPrice}', '${totalAmount}', '${address1}');`)      
-      await pool.query(`COMMIT TRANSACTION;`);
-		  res.send(true);
-      res.end();
+      creds[0] = true;
+      const q1 = await pool.query(`select * from public.userprofile where username='${req.session.username}';`);
+
+      if(q1.rowCount == 0)
+      {
+        console.log('Profile not set. Redirecting to regProfilehtml')
+        res.send(creds);
+        res.end();
+      }
+
+      else
+      {
+        creds[1] = true;
+        const {date, gallons, suggestedPrice, totalAmount} = req.body;
+        console.log('Quote placed for date: ' + date + ' for ' + gallons + ' gallons. Suggested price: $' + suggestedPrice + '. Total amount: $' + totalAmount);
+        const address = await pool.query(`SELECT concat(address1,' ',address2, ', ', city, ', ', state, ', ', zipcode) FROM public.userprofile WHERE username='${req.session.username}';`);
+        const address1 = address.rows[0].concat
+        console.log(address1)
+        await pool.query(`BEGIN TRANSACTION;`);
+        console.log(`INSERT INTO public.history VALUES( '${req.session.username}','${date}', '${gallons}', '${suggestedPrice}', '${totalAmount}', '${address1}');`);
+        const submitquery = await pool.query(`INSERT INTO public.history VALUES( '${req.session.username}','${date}', '${gallons}', '${suggestedPrice}', '${totalAmount}', '${address1}');`)      
+        await pool.query(`COMMIT TRANSACTION;`);
+        creds[2] = true;
+        res.send(creds);
+        res.end();
+      } 
 		}
     
 	} catch(err){
