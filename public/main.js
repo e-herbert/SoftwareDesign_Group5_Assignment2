@@ -719,6 +719,7 @@ async function submitQuote(){
 		else 
 		{
 			alert("Thank you for using our app. Your quote has been submitted.");
+            location.href = "getQuote.html"
 		}
 	}
 	catch(err){
